@@ -22,9 +22,6 @@
 
 ;;; Code:
 
-(when *is-a-mac*
-  (maybe-require-package 'grab-mac-link))
-
 (maybe-require-package 'org-cliplink)
 
 (define-key global-map (kbd "C-c l") 'org-store-link)
@@ -39,6 +36,13 @@
 (define-key sanityinc/org-global-prefix-map (kbd "o") 'org-clock-out)
 (define-key global-map (kbd "C-c o") sanityinc/org-global-prefix-map)
 
+(require 'org)
+(require 'ox-publish)
+
+(maybe-require-package 'ox-jekyll-md)
+(maybe-require-package 'org-preview-html)
+(maybe-require-package 'org-link-beautify)
+(maybe-require-package 'ox-reveal)
 
 ;; Various preferences
 (setq org-log-done t
@@ -49,7 +53,7 @@
       org-fast-tag-selection-single-key 'expert
       org-html-validation-link nil
       org-export-kill-product-buffer-when-displayed t
-      org-tags-column 80)
+      org-tags-column 100)
 
 
 ;; Lots of stuff from http://doc.norang.ca/org-mode.html
@@ -359,6 +363,8 @@ typical word processor."
     (define-key org-mode-map (kbd "M-h") nil)
     (define-key org-mode-map (kbd "C-c g") 'grab-mac-link)))
 
+(maybe-require-package 'ob-rust)
+
 (with-eval-after-load 'org
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -367,7 +373,11 @@ typical word processor."
      (dot . t)
      (emacs-lisp . t)
      (gnuplot . t)
+     (go . t)
      (haskell . nil)
+     (http . t)
+     (java . t)
+     (kotlin . t)
      (latex . t)
      (ledger . t)
      (ocaml . nil)
@@ -375,11 +385,16 @@ typical word processor."
      (plantuml . t)
      (python . t)
      (ruby . t)
+     (rust . t)
      (screen . nil)
+     (table . t)
      (,(if (locate-library "ob-sh") 'sh 'shell) . t)
      (sql . t)
      (sqlite . t))))
 
+(setq org-plantuml-exec-mode "jar")
+(setq org-plantuml-jar-path "~/.emacs.d/plantuml.jar")
+(setq org-plantuml-executable-args "-headless -charset UTF-8")
 
 (provide 'init-org)
 ;;; init-org.el ends here
