@@ -22,6 +22,7 @@
 
 ;;; Code:
 
+
 (maybe-require-package 'org-cliplink)
 
 (define-key global-map (kbd "C-c l") 'org-store-link)
@@ -52,6 +53,7 @@
       org-export-coding-system 'utf-8
       org-fast-tag-selection-single-key 'expert
       org-html-validation-link nil
+      org-startup-truncated nil
       org-export-kill-product-buffer-when-displayed t
       org-tags-column 100)
 
@@ -64,7 +66,6 @@
             (lambda () (add-hook 'window-configuration-change-hook 'org-agenda-align-tags nil t))))
 
 
-
 
 (maybe-require-package 'writeroom-mode)
 
@@ -105,7 +106,7 @@ typical word processor."
     (when (fboundp 'writeroom-mode)
       (writeroom-mode 0))))
 
-;;(add-hook 'org-mode-hook 'buffer-face-mode)
+(add-hook 'org-mode-hook 'buffer-face-mode)
 
 
 (setq org-support-shift-select t)
@@ -161,7 +162,7 @@ typical word processor."
 ;; Allow refile to create parent tasks with confirmation
 (setq org-refile-allow-creating-parent-nodes 'confirm)
 
-
+
 ;;; To-do settings
 
 (setq org-todo-keywords
@@ -175,7 +176,6 @@ typical word processor."
               ("PROJECT" :inherit font-lock-string-face))))
 
 
-
 ;;; Agenda views
 
 (setq-default org-agenda-clockreport-parameter-plist '(:link t :maxlevel 3))
@@ -288,7 +288,6 @@ typical word processor."
       '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))
 
 
-
 ;;; Show the clocked-in task - if any - in the header line
 (defun sanityinc/show-org-clock-in-header-line ()
   (setq-default header-line-format '((" " org-mode-line-string " "))))
@@ -305,7 +304,6 @@ typical word processor."
   (define-key org-clock-mode-line-map [header-line mouse-1] 'org-clock-menu))
 
 
-
 (when (and *is-a-mac* (file-directory-p "/Applications/org-clock-statusbar.app"))
   (add-hook 'org-clock-in-hook
             (lambda () (call-process "/usr/bin/osascript" nil 0 nil "-e"
@@ -315,12 +313,10 @@ typical word processor."
                                 "tell application \"org-clock-statusbar\" to clock out"))))
 
 
-
 ;; TODO: warn about inconsistent items, e.g. TODO inside non-PROJECT
 ;; TODO: nested projects!
 
 
-
 ;;; Archiving
 
 (setq org-archive-mark-done nil)
@@ -328,7 +324,6 @@ typical word processor."
 
 
 
-
 
 (require-package 'org-pomodoro)
 (setq org-pomodoro-keep-killed-pomodoro-time t)
@@ -363,7 +358,11 @@ typical word processor."
     (define-key org-mode-map (kbd "M-h") nil)
     (define-key org-mode-map (kbd "C-c g") 'grab-mac-link)))
 
+
+(maybe-require-package 'ob-http)
+(maybe-require-package 'ob-kotlin)
 (maybe-require-package 'ob-rust)
+
 
 (with-eval-after-load 'org
   (org-babel-do-load-languages
