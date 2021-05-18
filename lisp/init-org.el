@@ -47,6 +47,7 @@
 
 ;; Various preferences
 (setq org-log-done t
+      org-startup-with-inline-images t
       org-edit-timestamp-down-means-later t
       org-hide-emphasis-markers t
       org-catch-invisible-edits 'show
@@ -362,7 +363,8 @@ typical word processor."
 (maybe-require-package 'ob-http)
 (maybe-require-package 'ob-kotlin)
 (maybe-require-package 'ob-rust)
-
+(maybe-require-package 'ob-go)
+(maybe-require-package 'plantuml-mode)
 
 (with-eval-after-load 'org
   (org-babel-do-load-languages
