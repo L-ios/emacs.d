@@ -62,7 +62,7 @@
 (require 'init-flycheck)
 
 (require 'init-recentf)
-(require 'init-selectrum)
+(require 'init-minibuffer)
 (require 'init-hippie-expand)
 (require 'init-company)
 (require 'init-windows)
@@ -133,6 +133,8 @@
 (require-package 'gnuplot)
 (require-package 'lua-mode)
 (require-package 'htmlize)
+(when *is-a-mac*
+  (require-package 'osx-location))
 (maybe-require-package 'dotenv-mode)
 (maybe-require-package 'shfmt)
 
