@@ -85,9 +85,6 @@
         (define-key map (kbd "C-c b l") 'blog-pack-load-setup)
         map))
 
-(add-hook 'org2jekyll-mode-hook 'blog-pack-load-setup)
-(add-hook 'org2jekyll-mode-hook 'blog-pack-mode)
-
 ;;;###autoload
 (define-minor-mode blog-pack-mode
   "Functionality for publishing the current org-mode post to jekyll.
@@ -103,6 +100,9 @@ Commands:
   :group 'blog-pack
   :keymap blog-pack-mode-map)
 (require 'ox-publish)
+
+(add-hook 'org2jekyll-mode-hook 'blog-pack-load-setup)
+(add-hook 'org2jekyll-mode-hook 'blog-pack-mode)
 
 (provide 'init-blog)
 ;;; blog-pack.el ends here
