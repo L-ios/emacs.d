@@ -359,11 +359,6 @@ typical word processor."
     (define-key org-mode-map (kbd "M-h") nil)
     (define-key org-mode-map (kbd "C-c g") 'grab-mac-link)))
 
-
-(maybe-require-package 'ob-http)
-(maybe-require-package 'ob-kotlin)
-(maybe-require-package 'ob-rust)
-(maybe-require-package 'ob-go)
 (maybe-require-package 'plantuml-mode)
 
 (with-eval-after-load 'org
