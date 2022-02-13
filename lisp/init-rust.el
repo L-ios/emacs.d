@@ -27,7 +27,7 @@
       (setq lsp-ui-peek-always-show t)
       (setq lsp-ui-sideline-show-hover t)
       (setq lsp-ui-doc-enable nil)
-      (add-hook 'lsp-mode-hook #'lsp-ui)))
+      (add-hook 'lsp-mode-hook 'lsp-ui-mode)))
 
   (when (maybe-require-package 'company)
     ;; how long to wait until popup
