@@ -392,6 +392,8 @@ typical word processor."
       (sql . t)
       (sqlite . t)))))
 
+(setq org-confirm-babel-evaluate nil)
+
 (setq org-plantuml-exec-mode "jar")
 (setq org-plantuml-jar-path "~/.emacs.d/plantuml.jar")
 (setq org-plantuml-executable-args "-headless -charset UTF-8")

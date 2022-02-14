@@ -24,10 +24,20 @@
     (add-hook 'rustic-mode-hook #'lsp)
 
     (when (maybe-require-package 'lsp-ui)
-      (setq lsp-ui-peek-always-show t)
-      (setq lsp-ui-sideline-show-hover t)
-      (setq lsp-ui-doc-enable nil)
-      (add-hook 'lsp-mode-hook #'lsp-ui)))
+      (add-hook 'lsp-ui-mode-hook
+                (lambda ()
+                  ;; (setq lsp-ui-peek-always-show t)
+                  (setq lsp-ui-sideline-show-hover t)
+                  (setq lsp-ui-sideline-show-code-actions t)
+                  (setq lsp-ui-sideline-delay 0.6)
+                  (set-face-attribute 'lsp-ui-sideline-global t :height 0.75)
+                  (when (display-graphic-p)
+                    (setq lsp-ui-doc-enable t)
+                    (setq lsp-ui-doc-position 'at-point)
+                    (setq lsp-ui-doc-show-with-cursor t)
+                    (setq lsp-ui-doc-delay 0.5))))
+      (add-hook 'lsp-mode-hook 'lsp-ui-mode)))
+
 
   (when (maybe-require-package 'company)
     ;; how long to wait until popup
