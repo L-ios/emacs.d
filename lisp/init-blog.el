@@ -103,6 +103,7 @@ Commands:
 
 (add-hook 'org2jekyll-mode-hook 'blog-pack-load-setup)
 (add-hook 'org2jekyll-mode-hook 'blog-pack-mode)
+(add-hook 'org-mode-hook 'org2jekyll-mode)
 
 (provide 'init-blog)
 ;;; blog-pack.el ends here
