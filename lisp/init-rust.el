@@ -18,24 +18,36 @@
     ;; what to use when checking on-save. "check" is default, I prefer clippy
     (setq lsp-rust-analyzer-cargo-watch-command "clippy")
     ;; todo 是否为左侧的的渲染显示
-    (setq lsp-eldoc-render-all t)
+    ;; (setq lsp-eldoc-render-all t)
+    (setq lsp-eldoc-enable-hover t)
     (setq lsp-idle-delay 0.6)
     (setq lsp-rust-analyzer-server-display-inlay-hints t)
+    (with-eval-after-load 'lsp-ui-mode
+      (define-key rustic-mode-map (kdb "C-c C-c a") 'lsp-execute-code-action)
+      (define-key rustic-mode-map (kdb "C-c C-c r") 'lsp-rename)
+      (define-key rustic-mode-map (kdb "C-c C-c q") 'lsp-workspace-restart)
+      (define-key rustic-mode-map (kdb "C-c C-c Q") 'lsp-workspace-shutdown)
+      (define-key rustic-mode-map (kdb "C-c C-c s") 'lsp-rust-analyzer-status))
+
     (add-hook 'rustic-mode-hook #'lsp)
 
     (when (maybe-require-package 'lsp-ui)
       (add-hook 'lsp-ui-mode-hook
                 (lambda ()
-                  (setq lsp-ui-peek-always-show nil)
+                  (setq lsp-ui-peek-always-show t)
                   (setq lsp-ui-sideline-show-hover t)
                   (setq lsp-ui-sideline-show-code-actions t)
                   (setq lsp-ui-sideline-delay 0.6)
                   (set-face-attribute 'lsp-ui-sideline-global t :height 0.75)
                   (when (display-graphic-p)
                     (setq lsp-ui-doc-enable t)
+                    (setq lsp-ui-doc-f)
                     (setq lsp-ui-doc-position 'at-point)
                     (setq lsp-ui-doc-show-with-cursor t)
                     (setq lsp-ui-doc-delay 0.5))))
+      (with-eval-after-load 'lsp-ui-mode
+        (define-key rustic-mode-map (kbd "M-j") 'lsp-ui-imenu)
+        (define-key rustic-mode-map (kbd "M-?") 'lsp-ui-imenu))
       (add-hook 'lsp-mode-hook 'lsp-ui-mode)))
 
   (when (maybe-require-package 'company)
@@ -51,7 +63,8 @@
       (define-key company-active-map (kbd "M->") 'company-select-last)
       (define-key company-active-map (kbd "<tab>") 'tab-indent-or-complete)
       (define-key company-active-map (kbd "TAB") 'tab-indent-or-complete))
-    (add-hook 'rustic-mode #'company)))
+    (add-hook 'rustic-mode #'company))
+  (when (maybe-require-package 'toml-mode)))
 
 (defun rk/rustic-mode-hook ()
   ;; so that run C-c C-c C-r works without having to confirm, but don't try to
@@ -91,12 +104,15 @@
 (when (maybe-require-package 'yasnippet)
   ;;(yas-reload-all)
   (add-hook 'prog-mode-hook #'yas-minor-mode)
-  (add-hook 'text-mode-hook #'yas-minor-mode))
+  (add-hook 'text-mode-hook #'yas-minor-mode)
+  (maybe-require-package 'yasnippet-snippets))
+
 ;;; add for org
 (maybe-require-package 'ob-rust)
 
 (when (maybe-require-package 'flycheck-rust)
   (with-eval-after-load 'rustic-mode
+    (define-key rustic-mode-map (kbd "C-c C-c l") 'flycheck-list-errors)
     (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)))
 
 (provide 'init-rust)
