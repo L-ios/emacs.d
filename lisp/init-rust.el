@@ -22,16 +22,20 @@
     (setq lsp-eldoc-enable-hover t)
     (setq lsp-idle-delay 0.6)
     (setq lsp-rust-analyzer-server-display-inlay-hints t)
-    (with-eval-after-load 'lsp-ui-mode
-      (define-key rustic-mode-map (kdb "C-c C-c a") 'lsp-execute-code-action)
-      (define-key rustic-mode-map (kdb "C-c C-c r") 'lsp-rename)
-      (define-key rustic-mode-map (kdb "C-c C-c q") 'lsp-workspace-restart)
-      (define-key rustic-mode-map (kdb "C-c C-c Q") 'lsp-workspace-shutdown)
-      (define-key rustic-mode-map (kdb "C-c C-c s") 'lsp-rust-analyzer-status))
+    (with-eval-after-load 'rustic
+      (define-key rustic-mode-map (kbd "C-c C-c e") 'lsp-execute-code-action)
+      (define-key rustic-mode-map (kbd "C-c C-c r") 'lsp-rename)
+      (define-key rustic-mode-map (kbd "C-c C-c q") 'lsp-workspace-restart)
+      (define-key rustic-mode-map (kbd "C-c C-c Q") 'lsp-workspace-shutdown)
+      (define-key rustic-mode-map (kbd "C-c C-c s") 'lsp-rust-analyzer-status))
 
     (add-hook 'rustic-mode-hook #'lsp)
 
     (when (maybe-require-package 'lsp-ui)
+      (with-eval-after-load 'rustic
+        (define-key rustic-mode-map (kbd "C-c i") 'lsp-ui-doc-focus-frame)
+        (define-key rustic-mode-map (kbd "C-q") 'lsp-ui-imenu)
+        (define-key rustic-mode-map (kbd "M-?") 'lsp-find-references))
       (add-hook 'lsp-ui-mode-hook
                 (lambda ()
                   (setq lsp-ui-peek-always-show t)
@@ -41,12 +45,10 @@
                   (set-face-attribute 'lsp-ui-sideline-global t :height 0.75)
                   (when (display-graphic-p)
                     (setq lsp-ui-doc-enable t)
+                    (setq lsp-ui-doc-max-height 20)
                     (setq lsp-ui-doc-position 'at-point)
                     (setq lsp-ui-doc-show-with-cursor t)
                     (setq lsp-ui-doc-delay 0.5))))
-      (with-eval-after-load 'lsp-ui-mode
-        (define-key rustic-mode-map (kbd "C-q") 'lsp-ui-imenu)
-        (define-key rustic-mode-map (kbd "M-?") 'lsp-find-references))
       (add-hook 'lsp-mode-hook 'lsp-ui-mode)))
 
   (when (maybe-require-package 'company)
@@ -55,7 +57,7 @@
     ;; uncomment to disable popup
     ;; (setq company-begin-commands nil)
 
-    (with-eval-after-load 'rustic-mode
+    (with-eval-after-load 'rustic
       (define-key company-active-map (kbd "C-n") 'company-select-next)
       (define-key company-active-map (kbd "C-p") 'company-select-previous)
       (define-key company-active-map (kbd "M-<") 'company-select-first)
@@ -110,7 +112,7 @@
 (maybe-require-package 'ob-rust)
 
 (when (maybe-require-package 'flycheck-rust)
-  (with-eval-after-load 'rustic-mode
+  (with-eval-after-load 'rustic
     (define-key rustic-mode-map (kbd "C-c C-c l") 'flycheck-list-errors)
     (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)))
 
