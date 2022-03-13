@@ -5,23 +5,28 @@
 ;; base https://robert.kra.hn/posts/2021-02-07_rust-with-emacs/
 
 (when (maybe-require-package 'rustic)
-  ;; uncomment for less flashiness
-  ;; (setq lsp-eldoc-hook nil)
-  ;; (setq lsp-enable-symbol-highlighting nil)
-  ;; (setq lsp-signature-auto-activate nil)
-
   ;; comment to disable rustfmt on save
   ;; (setq rustic-format-on-save t)
   (add-hook 'rustic-mode-hook 'rk/rustic-mode-hook)
 
   (when (maybe-require-package 'lsp-mode)
+    ;; uncomment for less flashiness
+    (setq lsp-eldoc-hook nil)
+    (setq lsp-enable-symbol-highlighting nil)
+    (setq lsp-signature-auto-activate nil)
+
+    ;; todo 是否为左侧的的渲染显示
+    ;;(setq lsp-eldoc-render-all t)
+
+    (setq lsp-diagnostics-provider :none)
+    (setq lsp-eldoc-enable-hover nil)
+    (setq lsp-idle-delay 3)
+    (setq lsp-rust-analyzer-server-display-inlay-hints nil)
+    (setq lsp-rust-analyzer-cargo-watch-enable nil)
     ;; what to use when checking on-save. "check" is default, I prefer clippy
     (setq lsp-rust-analyzer-cargo-watch-command "clippy")
-    ;; todo 是否为左侧的的渲染显示
-    ;; (setq lsp-eldoc-render-all t)
-    (setq lsp-eldoc-enable-hover t)
-    (setq lsp-idle-delay 0.6)
-    (setq lsp-rust-analyzer-server-display-inlay-hints t)
+    (setq lsp-rust-server 'rust-analyzer)
+    (setq lsp-signature-render-documentation nil)
     (with-eval-after-load 'rustic
       (define-key rustic-mode-map (kbd "C-c C-c e") 'lsp-execute-code-action)
       (define-key rustic-mode-map (kbd "C-c C-c r") 'lsp-rename)
@@ -38,24 +43,24 @@
         (define-key rustic-mode-map (kbd "M-?") 'lsp-find-references))
       (add-hook 'lsp-ui-mode-hook
                 (lambda ()
-                  (setq lsp-ui-peek-always-show t)
-                  (setq lsp-ui-sideline-show-hover t)
-                  (setq lsp-ui-sideline-show-code-actions t)
-                  (setq lsp-ui-sideline-delay 0.6)
+                  (setq lsp-ui-peek-always-show nil)
+                  (setq lsp-ui-sideline-show-hover nil)
+                  (setq lsp-ui-sideline-show-code-actions nil)
+                  (setq lsp-ui-sideline-delay 3)
                   (set-face-attribute 'lsp-ui-sideline-global t :height 0.75)
                   (when (display-graphic-p)
                     (setq lsp-ui-doc-enable t)
                     (setq lsp-ui-doc-max-height 20)
                     (setq lsp-ui-doc-position 'at-point)
                     (setq lsp-ui-doc-show-with-cursor t)
-                    (setq lsp-ui-doc-delay 0.5))))
+                    (setq lsp-ui-doc-delay 3))))
       (add-hook 'lsp-mode-hook 'lsp-ui-mode)))
 
   (when (maybe-require-package 'company)
     ;; how long to wait until popup
-    (setq company-idle-delay 0.5)
+    (setq company-idle-delay 3)
     ;; uncomment to disable popup
-    ;; (setq company-begin-commands nil)
+    (setq company-begin-commands nil)
 
     (with-eval-after-load 'rustic
       (define-key company-active-map (kbd "C-n") 'company-select-next)
@@ -103,9 +108,10 @@
           (indent-for-tab-command)))))
 
 (when (maybe-require-package 'yasnippet)
-  ;;(yas-reload-all)
   (add-hook 'prog-mode-hook #'yas-minor-mode)
   (add-hook 'text-mode-hook #'yas-minor-mode)
+  (with-eval-after-load 'rustic
+    (yas-reload-all))
   (maybe-require-package 'yasnippet-snippets))
 
 ;;; add for org

@@ -7,8 +7,7 @@
 ;;; Code:
 
 ;; Produce backtraces when errors occur: can be helpful to diagnose startup issues
-;; (setq debug-on-error t)
-
+;;(setq debug-on-error t)
 (let ((minver "25.1"))
   (when (version< emacs-version minver)
     (error "Your Emacs is too old -- this config requires v%s or higher" minver)))
@@ -18,23 +17,28 @@
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (require 'init-benchmarking) ;; Measure startup time
 
-(defconst *spell-check-support-enabled* nil) ;; Enable with t if you prefer
+(defconst *spell-check-support-enabled* t) ;; Enable with t if you prefer
 (defconst *is-a-mac* (eq system-type 'darwin))
 (defconst *is-a-win* (eq system-type 'windows-nt))
+(when *is-a-win*
+  (set-language-environment "UTF-8")
+  (set-locale-environment "UTF-8")
+  (set-default-coding-systems 'utf-8))
+(when (fboundp 'set-charset-priority)
+  (set-charset-priority 'unicode))
+(prefer-coding-system 'utf-8-unix)
+(setq locale-coding-system 'utf-8-unix)
 
-
 ;; Adjust garbage collection thresholds during startup, and thereafter
-
 (let ((normal-gc-cons-threshold (* 512 1024 1024))
-      (init-gc-cons-threshold (* 128 1024 1024)))
+      (init-gc-cons-threshold (* 512 1024 1024)))
   (setq gc-cons-threshold init-gc-cons-threshold)
+  (setq read-process-output-max (* 128 1024 1024))
   (add-hook 'emacs-startup-hook
             (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
 
-
+
 ;; Bootstrap config
-
-
 (setq custom-file (locate-user-emacs-file "custom.el"))
 (require 'init-utils)
 (require 'init-site-lisp) ;; Must come before elpa, as it may provide package.el
@@ -42,7 +46,6 @@
 (require 'init-elpa)      ;; Machinery for installing required packages
 (require 'init-exec-path) ;; Set up $PATH
 
-
 ;; Allow users to provide an optional "init-preload-local.el"
 (require 'init-preload-local nil t)
 
@@ -126,7 +129,7 @@
 (require 'init-folding)
 (require 'init-dash)
 
-;; (require 'init-mu)
+;;(require 'init-mu)
 (require 'init-ledger)
 ;; Extra packages which don't require any configuration
 
@@ -140,7 +143,7 @@
 (maybe-require-package 'shfmt)
 
 (when (maybe-require-package 'uptimes)
-  (setq-default uptimes-keep-count 200)
+  (setq-default uptimes-keep-count 2000)
   (add-hook 'after-init-hook (lambda () (require 'uptimes))))
 
 (when (fboundp 'global-eldoc-mode)
@@ -148,7 +151,7 @@
 
 (require 'init-direnv)
 
-
+
 
 ;; Allow access from emacsclient
 (add-hook 'after-init-hook

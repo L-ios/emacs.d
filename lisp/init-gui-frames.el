@@ -2,7 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-
 ;; Stop C-z from minimizing windows under OS X
 
 (defun sanityinc/maybe-suspend-frame ()
@@ -13,7 +12,6 @@
 (global-set-key (kbd "C-z") 'sanityinc/maybe-suspend-frame)
 
 
-
 ;; Suppress GUI features
 
 (setq use-file-dialog nil)
@@ -21,7 +19,6 @@
 (setq inhibit-startup-screen t)
 
 
-
 ;; Window size and features
 
 (setq-default
@@ -78,16 +75,20 @@
           (lambda ()
             (setq line-spacing 0)))
 
-
 ;; Change global font size easily
 
 (require-package 'default-text-scale)
 (add-hook 'after-init-hook 'default-text-scale-mode)
 
 
-
 (require-package 'disable-mouse)
-
+;;(set-face-attribute 'default nil :family "等距更纱黑体 Slab SC" :height 110)
+;;(set-fontset-font "fontset-startup" 'iso-8859-1 "等距更纱黑体 Slab SC")
+(set-face-attribute 'default nil :family "FuraCode Nerd Font Mono")
+(set-fontset-font t 'han "等距更纱黑体 Slab SC")
+(set-fontset-font t 'symbol "Segoe UI Emoji" nil 'prepend)
+;;(set-fontset-font)
+;;(set-face-font 'default nil :family "等距更纱黑体 Slab SC" :size 12)
 
 (provide 'init-gui-frames)
 ;;; init-gui-frames.el ends here

@@ -37,9 +37,6 @@
 (define-key sanityinc/org-global-prefix-map (kbd "o") 'org-clock-out)
 (define-key global-map (kbd "C-c o") sanityinc/org-global-prefix-map)
 
-(require 'org)
-(require 'ox-publish)
-
 (maybe-require-package 'ox-jekyll-md)
 (maybe-require-package 'org-preview-html)
 (maybe-require-package 'org-link-beautify)
@@ -124,7 +121,6 @@ typical word processor."
         ))
 
 
-
 ;;; Refiling
 
 (setq org-refile-use-cache nil)
@@ -268,7 +264,6 @@ typical word processor."
 
 (add-hook 'org-agenda-mode-hook 'hl-line-mode)
 
-
 ;;; Org clock
 
 ;; Save the running clock and all clock history when exiting Emacs, load it on startup
@@ -287,7 +282,9 @@ typical word processor."
 ;; Show clock sums as hours and minutes, not "n days" etc.
 (setq org-time-clocksum-format
       '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))
-
+(add-hook 'org-mode-hook
+          (lambda ()
+            (set (make-local-variable 'system-time-locale) "C")))
 
 ;;; Show the clocked-in task - if any - in the header line
 (defun sanityinc/show-org-clock-in-header-line ()
@@ -355,6 +352,11 @@ typical word processor."
 
 (with-eval-after-load 'org
   (define-key org-mode-map (kbd "C-M-<up>") 'org-up-element)
+  (set-face-font 'org-table
+                 (font-spec :family "JetBrainsMono Nerd Font Mono"
+                            :extend t))
+  (set-face-font 'org-block
+                 (font-spec :family "Sarasa Fixed SC"))
   (when *is-a-mac*
     (define-key org-mode-map (kbd "M-h") nil)
     (define-key org-mode-map (kbd "C-c g") 'grab-mac-link)))
@@ -385,7 +387,6 @@ typical word processor."
       (python . t)
       (table . t)
       (ruby . t)
-      (rust . t)
       (screen . nil)
       (sh . t) ;; obsolete
       (shell . t)

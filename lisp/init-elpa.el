@@ -5,27 +5,33 @@
 (require 'package)
 (require 'cl-lib)
 
-
 ;;; Install into separate package dirs for each Emacs version, to prevent bytecode incompatibility
 (setq package-user-dir
       (expand-file-name (format "elpa-%s.%s" emacs-major-version emacs-minor-version)
                         user-emacs-directory))
 
 
-
 ;;; Standard package repositories
+(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
+(add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/") t)
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+(add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/") t)
 
-(add-to-list 'package-archives '( "melpa" . "https://melpa.org/packages/") t)
 ;; Official MELPA Mirror, in case necessary.
-;;(add-to-list 'package-archives (cons "melpa-mirror" (concat proto "://www.mirrorservice.org/sites/melpa.org/packages/")) t)
+;; (add-to-list 'package-archives (cons "melpa-mirror" (concat proto "://www.mirrorservice.org/sites/melpa.org/packages/")) t)
+(add-to-list 'package-archives (cons "melpa-stable-tuna" "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa-stable/") t)
+(add-to-list 'package-archives (cons "melpa-tuna" "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/") t)
+(add-to-list 'package-archives (cons "gnu-tuna" "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/") t)
+(add-to-list 'package-archives (cons "nongnu-tuna" "https://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/") t)
+(add-to-list 'package-archives (cons "org-tuna" "https://mirrors.tuna.tsinghua.edu.cn/elpa/org/") t)
 
 
-
 ;; Work-around for https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34341
 (when (and (version< emacs-version "26.3") (boundp 'libgnutls-version) (>= libgnutls-version 30604))
   (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
 
-
 ;;; On-demand installation of packages
 
 (defun require-package (package &optional min-version no-refresh)
@@ -57,13 +63,11 @@ locate PACKAGE."
      (message "Couldn't install optional package `%s': %S" package err)
      nil)))
 
-
 ;;; Fire up package.el
 
-(setq package-enable-at-startup nil)
+(setq package-enable-at-startup t)
 (package-initialize)
 
-
 ;; package.el updates the saved version of package-selected-packages correctly only
 ;; after custom-file has been loaded, which is a bug. We work around this by adding
 ;; the required packages to package-selected-packages after startup is complete.
@@ -90,15 +94,13 @@ advice for `require-package', to which ARGS are passed."
               (package--save-selected-packages
                (seq-uniq (append sanityinc/required-packages package-selected-packages))))))
 
-
 (require-package 'fullframe)
 (fullframe list-packages quit-window)
 
-
 (let ((package-check-signature nil))
   (require-package 'gnu-elpa-keyring-update))
 
-
+
 (defun sanityinc/set-tabulated-list-column-width (col-name width)
   "Set any column with name COL-NAME to the given WIDTH."
   (when (> width (length col-name))
