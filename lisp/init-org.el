@@ -321,8 +321,6 @@ typical word processor."
 (setq org-archive-location "%s_archive::* Archive")
 
 
-
-
 (require-package 'org-pomodoro)
 (setq org-pomodoro-keep-killed-pomodoro-time t)
 (with-eval-after-load 'org-agenda
@@ -352,16 +350,17 @@ typical word processor."
 
 (with-eval-after-load 'org
   (define-key org-mode-map (kbd "C-M-<up>") 'org-up-element)
-  (set-face-font 'org-table
-                 (font-spec :family "JetBrainsMono Nerd Font Mono"
-                            :extend t))
-  (set-face-font 'org-block
-                 (font-spec :family "Sarasa Fixed SC"))
+  (set-face-attribute 'org-block nil :family "JetBrainsMono Nerd Font Mono" :weight 'light' :extend t)
+  (set-face-attribute 'org-table nil :family "Sarasa Fixed SC")
+  (setq org-confirm-babel-evaluate nil)
   (when *is-a-mac*
     (define-key org-mode-map (kbd "M-h") nil)
     (define-key org-mode-map (kbd "C-c g") 'grab-mac-link)))
 
-(maybe-require-package 'plantuml-mode)
+(when (maybe-require-package 'plantuml-mode)
+  (setq org-plantuml-exec-mode "jar")
+  (setq org-plantuml-jar-path "~/.emacs.d/plantuml.jar")
+  (setq org-plantuml-executable-args "-headless -charset UTF-8"))
 
 (with-eval-after-load 'org
   (org-babel-do-load-languages
@@ -392,12 +391,6 @@ typical word processor."
       (shell . t)
       (sql . t)
       (sqlite . t)))))
-
-(setq org-confirm-babel-evaluate nil)
-
-(setq org-plantuml-exec-mode "jar")
-(setq org-plantuml-jar-path "~/.emacs.d/plantuml.jar")
-(setq org-plantuml-executable-args "-headless -charset UTF-8")
 
 (provide 'init-org)
 ;;; init-org.el ends here
