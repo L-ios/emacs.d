@@ -2,11 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-(defun disable-themes-on-terminal ()
-  "Disable theme on terminal with -nw."
-  (unless (display-graphic-p)
-    (set-face-background 'default "unspecified")))
-
 (defvar emacs-english-font "BlexMono Nerd Font Mono"
   "The font name of English.")
 
@@ -49,13 +44,6 @@
       (set-fontset-font t 'unicode "Noto Color Emoji" nil 'prepend)
       (set-font "BlexMono Nerd Font Mono" "思源黑体" 16 22))))
 
-;;(add-to-list 'after-make-frame-functions
-;;             (lambda (new-frame)
-;;               (select-frame new-frame)
-;;               (fix-font)))
-
-;;(fix-font)
-
 (setq auto-save-default t)
 
 (set 'process-connection-type nil)
@@ -71,8 +59,6 @@
               :internal-border-width 10))
   (setq rime-show-candidate 'posframe)
   (setq rime-posframe-style 'vertical))
-
-(add-hook 'after-init-hook 'disable-themes-on-terminal)
 
 (provide 'init-local)
 

@@ -83,10 +83,13 @@
 
 (require-package 'disable-mouse)
 ;;(set-fontset-font "fontset-startup" 'iso-8859-1 "等距更纱黑体 Slab SC")
-(dolist (charset '(kana han cjk-misc bopomofo unicode))
-  (set-fontset-font t charset "Sarasa Fixed Slab SC"))
-(set-face-attribute 'default nil :family "FuraCode Nerd Font Mono")
-(set-fontset-font t 'symbol "Segoe UI Emoji" nil 'prepend)
+(when (display-graphic-p)
+  (when *is-a-win*
+    (dolist (charset '(kana han cjk-misc bopomofo unicode))
+      (set-fontset-font t charset "Sarasa Fixed Slab SC"))
+    (set-face-attribute 'default nil :family "FuraCode Nerd Font Mono")
+    (set-fontset-font t 'symbol "Segoe UI Emoji" nil 'prepend))
+  (when (eq system-type 'gnu/linux)))
 
 (let ((alist '((33 . ".\\(?:\\(?:==\\|!!\\)\\|[!=]\\)")
                (35 . ".\\(?:###\\|##\\|_(\\|[#(?[_{]\\)")
@@ -118,6 +121,12 @@
     (set-char-table-range composition-function-table (car char-regexp)
                           `([,(cdr char-regexp) 0 font-shape-gstring]))))
 
+(defun disable-themes-on-terminal ()
+  "Disable theme on terminal with -nw."
+  (unless (display-graphic-p)
+    (set-face-background 'default "unspecified")))
+
+(add-hook 'after-init-hook 'disable-themes-on-terminal)
 
 (provide 'init-gui-frames)
 ;;; init-gui-frames.el ends here
