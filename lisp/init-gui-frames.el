@@ -82,10 +82,10 @@
 
 
 (require-package 'disable-mouse)
-;;(set-face-attribute 'default nil :family "等距更纱黑体 Slab SC" :height 110)
 ;;(set-fontset-font "fontset-startup" 'iso-8859-1 "等距更纱黑体 Slab SC")
+(dolist (charset '(kana han cjk-misc bopomofo unicode))
+  (set-fontset-font t charset "Sarasa Fixed Slab SC"))
 (set-face-attribute 'default nil :family "FuraCode Nerd Font Mono")
-(set-fontset-font t 'han "等距更纱黑体 Slab SC")
 (set-fontset-font t 'symbol "Segoe UI Emoji" nil 'prepend)
 
 (let ((alist '((33 . ".\\(?:\\(?:==\\|!!\\)\\|[!=]\\)")
@@ -118,8 +118,6 @@
     (set-char-table-range composition-function-table (car char-regexp)
                           `([,(cdr char-regexp) 0 font-shape-gstring]))))
 
-;;(set-fontset-font)
-;;(set-face-font 'default nil :family "等距更纱黑体 Slab SC" :size 12)
 
 (provide 'init-gui-frames)
 ;;; init-gui-frames.el ends here
