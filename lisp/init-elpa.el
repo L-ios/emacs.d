@@ -12,7 +12,7 @@
 
 
 ;;; Standard package repositories
-(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
 (add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/") t)
@@ -21,11 +21,11 @@
 
 ;; Official MELPA Mirror, in case necessary.
 ;; (add-to-list 'package-archives (cons "melpa-mirror" (concat proto "://www.mirrorservice.org/sites/melpa.org/packages/")) t)
-(add-to-list 'package-archives (cons "melpa-stable-tuna" "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa-stable/") t)
-(add-to-list 'package-archives (cons "melpa-tuna" "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/") t)
-(add-to-list 'package-archives (cons "gnu-tuna" "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/") t)
+;;(add-to-list 'package-archives (cons "melpa-stable" "https://mirrors.tuna.tsinghua.edu.cn/elpa/stable-melpa/") t)
+(add-to-list 'package-archives (cons "melpa" "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/") t)
+(add-to-list 'package-archives (cons "gnu" "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/") t)
 (add-to-list 'package-archives (cons "nongnu-tuna" "https://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/") t)
-(add-to-list 'package-archives (cons "org-tuna" "https://mirrors.tuna.tsinghua.edu.cn/elpa/org/") t)
+(add-to-list 'package-archives (cons "org" "https://mirrors.tuna.tsinghua.edu.cn/elpa/org/") t)
 
 
 ;; Work-around for https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34341
