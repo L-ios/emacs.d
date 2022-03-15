@@ -49,7 +49,7 @@
 (set 'process-connection-type nil)
 
 (defconst *use-emacs-rime* nil)
-(unless (or (display-graphic-p) *use-emacs-rime*)
+(when (and (display-graphic-p) *use-emacs-rime*)
   (require 'rime)
   (setq rime-user-data-dir "~/.config/ibus/rime")
   (setq rime-posframe-properties

@@ -108,7 +108,7 @@ typical word processor."
 
 
 (setq org-support-shift-select t)
-
+
 ;;; Capturing
 
 (global-set-key (kbd "C-c c") 'org-capture)
@@ -378,7 +378,7 @@ typical word processor."
       (http . t)
       (java . t)
       (kotlin . t)
-      (latex . t)
+      ;;(latex . t)
       (ledger . t)
       (ocaml . nil)
       (octave . t)

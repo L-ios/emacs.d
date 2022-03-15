@@ -12,20 +12,23 @@
 
 
 ;;; Standard package repositories
-;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+;; (setq package-archives '(("gnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+;;                          ("melpa" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+;;                          ("org" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
+;;                          ("nongnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")))
+
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
 (add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/") t)
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
-(add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/") t)
 
 ;; Official MELPA Mirror, in case necessary.
 ;; (add-to-list 'package-archives (cons "melpa-mirror" (concat proto "://www.mirrorservice.org/sites/melpa.org/packages/")) t)
-;;(add-to-list 'package-archives (cons "melpa-stable" "https://mirrors.tuna.tsinghua.edu.cn/elpa/stable-melpa/") t)
-(add-to-list 'package-archives (cons "melpa" "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/") t)
-(add-to-list 'package-archives (cons "gnu" "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/") t)
-(add-to-list 'package-archives (cons "nongnu-tuna" "https://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/") t)
-(add-to-list 'package-archives (cons "org" "https://mirrors.tuna.tsinghua.edu.cn/elpa/org/") t)
+
+(add-to-list 'package-archives (cons "melpa-mirror" "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/") t)
+(add-to-list 'package-archives (cons "gnu-mirror" "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/") t)
+(add-to-list 'package-archives (cons "nongnu-mirror" "https://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/") t)
+(add-to-list 'package-archives (cons "org-mirror" "https://mirrors.tuna.tsinghua.edu.cn/elpa/org/") t)
 
 
 ;; Work-around for https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34341
