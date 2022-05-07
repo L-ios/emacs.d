@@ -99,7 +99,8 @@ Commands:
   :lighter " bp"
   :group 'blog-pack
   :keymap blog-pack-mode-map)
-;;(require 'ox-publish)
+(maybe-require-package 'ox-publish)
+(maybe-require-package 'ox-jekyll-md)
 
 (add-hook 'org2jekyll-mode-hook 'blog-pack-load-setup)
 (add-hook 'org2jekyll-mode-hook 'blog-pack-mode)

@@ -37,7 +37,6 @@
 (define-key sanityinc/org-global-prefix-map (kbd "o") 'org-clock-out)
 (define-key global-map (kbd "C-c o") sanityinc/org-global-prefix-map)
 
-(maybe-require-package 'ox-jekyll-md)
 (maybe-require-package 'org-preview-html)
 (maybe-require-package 'org-link-beautify)
 (maybe-require-package 'ox-reveal)
@@ -278,6 +277,8 @@ typical word processor."
 (setq org-log-into-drawer t)
 ;; Removes clocked tasks with 0:00 duration
 (setq org-clock-out-remove-zero-time-clocks t)
+;; org mode adapt indentation default is nil
+(setq org-adapt-indentation t)
 
 ;; Show clock sums as hours and minutes, not "n days" etc.
 (setq org-time-clocksum-format
@@ -358,9 +359,13 @@ typical word processor."
     (define-key org-mode-map (kbd "C-c g") 'grab-mac-link)))
 
 (when (maybe-require-package 'plantuml-mode)
-  (setq org-plantuml-exec-mode "jar")
-  (setq org-plantuml-jar-path "~/.emacs.d/plantuml.jar")
-  (setq org-plantuml-executable-args "-headless -charset UTF-8"))
+  (with-eval-after-load 'plantuml-mode
+    (setq plantuml-exec-mode 'jar)
+    (setq plantuml-default-exec-mode 'jar)
+    (setq plantuml-jar-path "~/.emacs.d/plantuml.jar")
+    (setq org-plantuml-exec-mode 'jar)
+    (setq org-plantuml-jar-path "~/.emacs.d/plantuml.jar")
+    (setq org-plantuml-executable-args "-headless -charset UTF-8")))
 
 (with-eval-after-load 'org
   (org-babel-do-load-languages
@@ -378,7 +383,7 @@ typical word processor."
       (http . t)
       (java . t)
       (kotlin . t)
-      ;;(latex . t)
+      (latex . t)
       (ledger . t)
       (ocaml . nil)
       (octave . t)
