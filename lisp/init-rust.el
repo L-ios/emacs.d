@@ -28,6 +28,7 @@
     (setq lsp-rust-server 'rust-analyzer)
     (setq lsp-signature-render-documentation nil)
     (with-eval-after-load 'rustic
+      (define-key rustic-mode-map (kbd "TAB") 'company-indent-or-complete-common)
       (define-key rustic-mode-map (kbd "C-c C-c e") 'lsp-execute-code-action)
       (define-key rustic-mode-map (kbd "C-c C-c r") 'lsp-rename)
       (define-key rustic-mode-map (kbd "C-c C-c q") 'lsp-workspace-restart)
@@ -59,6 +60,9 @@
   (when (maybe-require-package 'company)
     ;; how long to wait until popup
     (setq company-idle-delay 3)
+    (setq company-tooltip-align-annotations t)
+
+
     ;; uncomment to disable popup
     (setq company-begin-commands nil)
 

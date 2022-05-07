@@ -101,6 +101,7 @@ Commands:
   :keymap blog-pack-mode-map)
 (maybe-require-package 'ox-publish)
 (maybe-require-package 'ox-jekyll-md)
+(maybe-require-package 'ox-gfm)
 
 (add-hook 'org2jekyll-mode-hook 'blog-pack-load-setup)
 (add-hook 'org2jekyll-mode-hook 'blog-pack-mode)
