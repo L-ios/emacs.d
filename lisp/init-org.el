@@ -362,6 +362,7 @@ typical word processor."
   (with-eval-after-load 'plantuml-mode
     (setq plantuml-exec-mode 'jar)
     (setq plantuml-default-exec-mode 'jar)
+    (setq plantuml-indent-level 2)
     (setq plantuml-jar-path "~/.emacs.d/plantuml.jar")
     (setq org-plantuml-exec-mode 'jar)
     (setq org-plantuml-jar-path "~/.emacs.d/plantuml.jar")
@@ -396,6 +397,8 @@ typical word processor."
       (shell . t)
       (sql . t)
       (sqlite . t)))))
+
+(setq org-export-backends '(ascii html latex md))
 
 (provide 'init-org)
 ;;; init-org.el ends here

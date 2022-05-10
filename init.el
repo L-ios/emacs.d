@@ -31,6 +31,7 @@
 (prefer-coding-system 'utf-8-unix)
 (setq locale-coding-system 'utf-8-unix)
 
+(setq inhibit-compacting-font-caches t)
 ;; Adjust garbage collection thresholds during startup, and thereafter
 (let ((normal-gc-cons-threshold (* 512 1024 1024))
       (init-gc-cons-threshold (* 512 1024 1024)))

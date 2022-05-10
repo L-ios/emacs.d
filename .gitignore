@@ -55,3 +55,7 @@ site-lisp/package/
 /smex-items
 /eln-cache/
 /projects
+emojis/
+fonts/
+projectile.cache
+server/
