@@ -380,6 +380,7 @@ typical word processor."
       (emacs-lisp . t)
       (gnuplot . t)
       (go . t)
+      (groovy . t)
       (haskell . nil)
       (http . t)
       (java . t)
