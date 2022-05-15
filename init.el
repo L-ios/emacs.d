@@ -162,6 +162,7 @@
           (lambda ()
             (require 'server)
             (unless (server-running-p)
+              (setq server-use-tcp t)
               (server-start))))
 
 ;; Variables configured via the interactive 'customize' interface
