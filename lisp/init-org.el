@@ -22,6 +22,8 @@
 
 ;;; Code:
 
+(when *is-a-mac*
+  (maybe-require-package 'grab-mac-link))
 
 (maybe-require-package 'org-cliplink)
 
@@ -283,9 +285,9 @@ typical word processor."
 ;; Show clock sums as hours and minutes, not "n days" etc.
 (setq org-time-clocksum-format
       '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))
-(add-hook 'org-mode-hook
-          (lambda ()
-            (set (make-local-variable 'system-time-locale) "C")))
+
+;; (add-hook 'org-mode-hook
+;;           (set (make-local-variable 'system-time-locale) "C"))
 
 ;;; Show the clocked-in task - if any - in the header line
 (defun sanityinc/show-org-clock-in-header-line ()
@@ -351,8 +353,6 @@ typical word processor."
 
 (with-eval-after-load 'org
   (define-key org-mode-map (kbd "C-M-<up>") 'org-up-element)
-  (set-face-attribute 'org-block nil :family "JetBrainsMono Nerd Font Mono" :weight 'light' :extend t)
-  (set-face-attribute 'org-table nil :family "Sarasa Fixed SC")
   (setq org-confirm-babel-evaluate nil)
   (when *is-a-mac*
     (define-key org-mode-map (kbd "M-h") nil)

@@ -31,13 +31,17 @@
 
 ;; Setup font size based on emacs-font-size-pair
 ;;(set-font emacs-english-font emacs-cjk-font emacs-font-size-pair)
-;;(set-frame-font (format "%s:pixelsize=%d" "等距更纱黑体 Slab SC" 12) t)
+;;(set-frame-font (format "%s:pixelsize=%d" "等距更纱黑体 Slab SC" 12) to)
+
+(when *is-a-mac*
+  (add-to-list 'image-types 'svg))
 
 (defun fix-font ()
   "set font"
   (when (display-graphic-p)
     (when *is-a-win*
       (set-fontset-font t 'unicode "Segoe UI Emoji" nil 'prepend)
+
       (set-font "BlexMono Nerd Font Mono" "思源黑体 CN Light" 20 24))
     (when (eq system-type 'gnu/linux)
       (setq fonts '("Source Code Pro" "思源黑体"))
@@ -47,6 +51,21 @@
 (setq auto-save-default t)
 
 (set 'process-connection-type nil)
+
+(defun org/fix-font ()
+  (interactive)
+  (setq org-block-font "JetBrainsMono Nerd Font Mono")
+  (if (member org-block-font (font-family-list))
+      (set-face-attribute 'org-block nil :family org-block-font :weight 'light' :extend t)
+    (message "%s not in font-family-list" org-block-font))
+  (setq org-table-font "Sarasa Term SC Nerd")
+  (if (member org-table-font (font-family-list))
+      (set-face-attribute 'org-table nil :family org-table-font)
+    (message "%s not in font-family-list" org-table-font)))
+
+(with-eval-after-load 'org-faces
+  (when (and 'display-graphic-p *is-a-mac*)
+    (org/fix-font)))
 
 (defconst *use-emacs-rime* nil)
 (when (and (display-graphic-p) *use-emacs-rime*)

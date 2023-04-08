@@ -34,10 +34,10 @@
 
 (setq inhibit-compacting-font-caches t)
 ;; Adjust garbage collection thresholds during startup, and thereafter
-(let ((normal-gc-cons-threshold (* 512 1024 1024))
-      (init-gc-cons-threshold (* 512 1024 1024)))
+(let ((normal-gc-cons-threshold (* 32 1024 1024 (if *is-a-win* 16 1)))
+      (init-gc-cons-threshold (* 128 1024 1024 (if *is-a-win* 4 1))))
   (setq gc-cons-threshold init-gc-cons-threshold)
-  (setq read-process-output-max (* 128 1024 1024))
+  (setq read-process-output-max (* 128 1024 1024 (if *is-a-win* 2 1)))
   (add-hook 'emacs-startup-hook
             (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
 
@@ -61,6 +61,7 @@
 (require 'init-frame-hooks)
 (require 'init-xterm)
 (require 'init-themes)
+(require 'init-osx-keys)
 (require 'init-gui-frames)
 (require 'init-dired)
 (require 'init-isearch)
@@ -118,6 +119,7 @@
 (require 'init-yaml)
 (require 'init-docker)
 (require 'init-terraform)
+(require 'init-nix)
 (maybe-require-package 'nginx-mode)
 
 (require 'init-paredit)
