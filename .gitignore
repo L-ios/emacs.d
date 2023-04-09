@@ -59,3 +59,7 @@ emojis/
 fonts/
 projectile.cache
 server/
+.markdown-preview.html
+note/
+org-roam.db
+tutorial/

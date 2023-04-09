@@ -57,6 +57,15 @@
       org-tags-column 100)
 
 
+(when (maybe-require-package 'org-journal)
+  ;; org-journal doc: https://github.com/bastibe/org-journal
+  (setq org-journal-dir "~/.emacs.d/journal/")
+  (setq org-journal-date-format "%A, %d %B %Y"))
+
+(when (maybe-require-package 'org-modern)
+  (add-hook 'org-mode-hook #'org-modern-mode)
+  (add-hook 'org-agenda-finalize-hook #'org-modern-mode))
+
 ;; Lots of stuff from http://doc.norang.ca/org-mode.html
 
 ;; Re-align tags when window shape changes
@@ -113,6 +122,8 @@ typical word processor."
 ;;; Capturing
 
 (global-set-key (kbd "C-c c") 'org-capture)
+;; (setq org-default-notes-file (concat org-directory "/notes.org"))
+(setq org-default-notes-file "~/.emacs.d/note/index.org")
 
 (setq org-capture-templates
       `(("t" "todo" entry (file "")  ; "" => `org-default-notes-file'
@@ -120,11 +131,11 @@ typical word processor."
         ("n" "note" entry (file "")
          "* %? :NOTE:\n%U\n%a\n" :clock-resume t)
         ))
-
+;; (add-to-list 'org-capture-templates)
 
 ;;; Refiling
 
-(setq org-refile-use-cache t)
+(setq org-refile-use-cache nil)
 
 ;; Targets include this file and any file contributing to the agenda - up to 5 levels deep
 (setq org-refile-targets '((nil :maxlevel . 5) (org-agenda-files :maxlevel . 5)))

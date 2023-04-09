@@ -7,7 +7,7 @@
 ;;; Code:
 
 ;; Produce backtraces when errors occur: can be helpful to diagnose startup issues
-;;(setq debug-on-error t)
+(setq debug-on-error t)
 
 (let ((minver "26.1"))
   (when (version< emacs-version minver)
@@ -99,6 +99,7 @@
 (require 'init-php)
 (require 'init-org)
 (require 'init-blog)
+;; (require 'init-org-roam)
 (require 'init-nxml)
 (require 'init-html)
 (require 'init-css)
@@ -118,6 +119,7 @@
 (require 'init-toml)
 (require 'init-yaml)
 (require 'init-docker)
+(require 'init-golang)
 (require 'init-terraform)
 (require 'init-nix)
 (maybe-require-package 'nginx-mode)
