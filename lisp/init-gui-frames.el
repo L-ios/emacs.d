@@ -62,6 +62,12 @@
 (global-set-key (kbd "M-C-9") (lambda () (interactive) (sanityinc/adjust-opacity nil 2)))
 (global-set-key (kbd "M-C-7") (lambda () (interactive) (modify-frame-parameters nil `((alpha . 100)))))
 
+(defun disable-themes-on-terminal ()
+  "Disable theme on terminal with -nw."
+  (unless (display-graphic-p)
+    (lambda () (interactive) (sanityinc/adjust-opacity nil -100))))
+
+(add-hook 'after-init-hook 'disable-themes-on-terminal)
 
 (when *is-a-mac*
   (when (maybe-require-package 'ns-auto-titlebar)
@@ -129,13 +135,6 @@
       (set-char-table-range composition-function-table (car char-regexp)
                             `([,(cdr char-regexp) 0 font-shape-gstring])))))
 
-
-(defun disable-themes-on-terminal ()
-  "Disable theme on terminal with -nw."
-  (unless (display-graphic-p)
-    (set-face-background 'default "unspecified")))
-
-
 (defvar emacs-english-font "BlexMono Nerd Font Mono"
   "The font name of English.")
 
@@ -180,8 +179,6 @@
       (setq fonts '("Source Code Pro" "思源黑体"))
       (set-fontset-font t 'unicode "Noto Color Emoji" nil 'prepend)
       (set-font "BlexMono Nerd Font Mono" "思源黑体" 16 22))))
-
-(add-hook 'after-init-hook 'disable-themes-on-terminal)
 
 (provide 'init-gui-frames)
 ;;; init-gui-frames.el ends here
