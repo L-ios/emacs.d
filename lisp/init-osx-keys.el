@@ -3,6 +3,9 @@
 ;;; Code:
 
 (when *is-a-mac*
+  ;;; I prefer cmd key for meta
+  (setq mac-option-key-is-meta nil)
+  (setq mac-command-key-is-meta t)
   (setq mac-command-modifier 'meta)
   (setq mac-option-modifier 'none)
   ;; Make mouse wheel / trackpad scrolling less jerky

@@ -62,9 +62,11 @@
   (setq org-journal-dir "~/.emacs.d/journal/")
   (setq org-journal-date-format "%A, %d %B %Y"))
 
-(when (maybe-require-package 'org-modern)
-  (add-hook 'org-mode-hook #'org-modern-mode)
-  (add-hook 'org-agenda-finalize-hook #'org-modern-mode))
+
+(when (display-graphic-p)
+  (when (maybe-require-package 'org-modern)
+    (add-hook 'org-mode-hook #'org-modern-mode)
+    (add-hook 'org-agenda-finalize-hook #'org-modern-mode)))
 
 ;; Lots of stuff from http://doc.norang.ca/org-mode.html
 
@@ -118,23 +120,6 @@ typical word processor."
 
 
 (setq org-support-shift-select t)
-
-
-(defun org/fix-font ()
-  (interactive)
-  (setq org-block-font "JetBrainsMono Nerd Font Mono")
-  (if (member org-block-font (font-family-list))
-      (set-face-attribute 'org-block nil :family org-block-font :weight 'light' :extend t)
-    (message "%s not in font-family-list" org-block-font))
-  (setq org-table-font "Sarasa Term SC Nerd")
-  (if (member org-table-font (font-family-list))
-      (set-face-attribute 'org-table nil :family org-table-font)
-    (message "%s not in font-family-list" org-table-font)))
-
-(with-eval-after-load 'org-faces
-  (when (and 'display-graphic-p *is-a-mac*)
-    (org/fix-font)))
-
 
 ;;; Capturing
 
