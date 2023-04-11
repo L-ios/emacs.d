@@ -7,7 +7,7 @@
 ;;; Code:
 
 ;; Produce backtraces when errors occur: can be helpful to diagnose startup issues
-(setq debug-on-error t)
+;; (setq debug-on-error t)
 
 (let ((minver "26.1"))
   (when (version< emacs-version minver)
@@ -23,16 +23,7 @@
 (defconst *spell-check-support-enabled* t) ;; Enable with t if you prefer
 (defconst *is-a-mac* (eq system-type 'darwin))
 (defconst *is-a-win* (eq system-type 'windows-nt))
-(when *is-a-win*
-  (set-language-environment "UTF-8")
-  (set-locale-environment "UTF-8")
-  (set-default-coding-systems 'utf-8))
-(when (fboundp 'set-charset-priority)
-  (set-charset-priority 'unicode))
-(prefer-coding-system 'utf-8-unix)
-(setq locale-coding-system 'utf-8-unix)
 
-(setq inhibit-compacting-font-caches t)
 ;; Adjust garbage collection thresholds during startup, and thereafter
 (let ((normal-gc-cons-threshold (* 32 1024 1024 (if *is-a-win* 16 1)))
       (init-gc-cons-threshold (* 128 1024 1024 (if *is-a-win* 4 1))))
@@ -40,7 +31,6 @@
   (setq read-process-output-max (* 128 1024 1024 (if *is-a-win* 2 1)))
   (add-hook 'emacs-startup-hook
             (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
-
 
 ;; Bootstrap config
 (setq custom-file (locate-user-emacs-file "custom.el"))
@@ -160,8 +150,6 @@
   (add-hook 'after-init-hook 'global-eldoc-mode))
 
 (require 'init-direnv)
-
-
 
 ;; Allow access from emacsclient
 (add-hook 'after-init-hook

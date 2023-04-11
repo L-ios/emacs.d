@@ -119,6 +119,23 @@ typical word processor."
 
 (setq org-support-shift-select t)
 
+
+(defun org/fix-font ()
+  (interactive)
+  (setq org-block-font "JetBrainsMono Nerd Font Mono")
+  (if (member org-block-font (font-family-list))
+      (set-face-attribute 'org-block nil :family org-block-font :weight 'light' :extend t)
+    (message "%s not in font-family-list" org-block-font))
+  (setq org-table-font "Sarasa Term SC Nerd")
+  (if (member org-table-font (font-family-list))
+      (set-face-attribute 'org-table nil :family org-table-font)
+    (message "%s not in font-family-list" org-table-font)))
+
+(with-eval-after-load 'org-faces
+  (when (and 'display-graphic-p *is-a-mac*)
+    (org/fix-font)))
+
+
 ;;; Capturing
 
 (global-set-key (kbd "C-c c") 'org-capture)

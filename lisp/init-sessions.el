@@ -5,7 +5,13 @@
 ;; save a list of open files in ~/.emacs.d/.emacs.desktop
 (setq desktop-path (list user-emacs-directory)
       desktop-auto-save-timeout 600)
-(desktop-save-mode 1)
+(unless *is-a-win*
+  (desktop-save-mode 1))
+
+(setq auto-save-default t)
+
+(when *is-a-win*
+  (set 'process-connection-type nil))
 
 (defun sanityinc/desktop-time-restore (orig &rest args)
   (let ((start-time (current-time)))

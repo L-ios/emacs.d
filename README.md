@@ -6,6 +6,8 @@
 - [ ] org capture 未配置好
 - [ ] org agenda 未配置好
 - [ ] org gtd 未学会
+- [ ] rust corfu 替换autocompletion
+- [ ] python 增强
 
 # A reasonable Emacs config
 

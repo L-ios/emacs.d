@@ -4,6 +4,9 @@
 
 ;; Stop C-z from minimizing windows under OS X
 
+(when *is-a-win*
+  (setq inhibit-compacting-font-caches t))
+
 (defun sanityinc/maybe-suspend-frame ()
   (interactive)
   (unless (and *is-a-mac* window-system)
@@ -64,6 +67,8 @@
   (when (maybe-require-package 'ns-auto-titlebar)
     (ns-auto-titlebar-mode)))
 
+(when *is-a-mac*
+  (add-to-list 'image-types 'svg))
 
 (setq frame-title-format
       '((:eval (if (buffer-file-name)
@@ -83,7 +88,7 @@
 
 
 (require-package 'disable-mouse)
-;;(set-fontset-font "fontset-startup" 'iso-8859-1 "等距更纱黑体 Slab SC")
+
 (when (display-graphic-p)
   (when *is-a-win*
     (dolist (charset '(kana han cjk-misc bopomofo unicode))
@@ -130,7 +135,53 @@
   (unless (display-graphic-p)
     (set-face-background 'default "unspecified")))
 
-;;(add-hook 'after-init-hook 'disable-themes-on-terminal)
+
+(defvar emacs-english-font "BlexMono Nerd Font Mono"
+  "The font name of English.")
+
+(defvar emacs-cjk-font "思源黑体 CN Light"
+  "The font name for CJK.")
+
+(defvar emacs-font-size-pair '(20 . 24)
+  "Default font size pair for (english . chinese)")
+
+(defun font-exist-p (fontname)
+  "test if this font is exist or not."
+  (if (or (not fontname) (string= fontname ""))
+      nil
+    (if (not (x-list-fonts fontname))
+        nil t)))
+
+(defun set-font (english chinese size-pair)
+  "Setup emacs English and Chinese font on x window-system."
+
+  (if (font-exist-p english)
+      (set-frame-font (format "%s:pixelsize=%d" english (car size-pair)) t))
+
+  (if (font-exist-p chinese)
+      (dolist (charset '(kana han symbol cjk-misc bopomofo))
+        (set-fontset-font (frame-parameter nil 'font) charset
+                          (font-spec :family chinese :size (cdr size-pair))))))
+
+;; Setup font size based on emacs-font-size-pair
+;;(set-font emacs-english-font emacs-cjk-font emacs-font-size-pair)
+;;(set-frame-font (format "%s:pixelsize=%d" "等距更纱黑体 Slab SC" 12) to)
+
+
+
+(defun fix-font ()
+  "set font"
+  (when (display-graphic-p)
+    (when *is-a-win*
+      (set-fontset-font t 'unicode "Segoe UI Emoji" nil 'prepend)
+
+      (set-font "BlexMono Nerd Font Mono" "思源黑体 CN Light" 20 24))
+    (when (eq system-type 'gnu/linux)
+      (setq fonts '("Source Code Pro" "思源黑体"))
+      (set-fontset-font t 'unicode "Noto Color Emoji" nil 'prepend)
+      (set-font "BlexMono Nerd Font Mono" "思源黑体" 16 22))))
+
+(add-hook 'after-init-hook 'disable-themes-on-terminal)
 
 (provide 'init-gui-frames)
 ;;; init-gui-frames.el ends here
