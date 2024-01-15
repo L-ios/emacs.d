@@ -106,7 +106,10 @@
     (set-fontset-font t 'symbol "Segoe UI Emoji" nil 'prepend))
   (when (eq system-type 'gnu/linux))
   (when *is-a-mac*
-    (set-face-attribute 'default nil :family "Sarasa Term SC Nerd" :height 120 :weight 'normal)))
+    (dolist (charset '(kana han cjk-misc bopomofo unicode))
+      (set-fontset-font t charset "Sarasa Fixed Slab SC Nerd Font"))
+    ;; (set-face-attribute 'default nil :family "Sarasa Term SC Nerd" :height 120 :weight 'normal)
+    ))
 
 (when (display-graphic-p)
   (let ((charlist '((33 . ".\\(?:\\(?:==\\|!!\\)\\|[!=]\\)")
