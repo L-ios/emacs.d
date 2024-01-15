@@ -6,22 +6,28 @@
 
 (when (maybe-require-package 'rustic)
   ;; comment to disable rustfmt on save
-  ;; (setq rustic-format-on-save t)
+  (setq rustic-format-on-save t)
   (add-hook 'rustic-mode-hook 'rk/rustic-mode-hook)
 
   (when (maybe-require-package 'lsp-mode)
     ;; uncomment for less flashiness
-    (setq lsp-eldoc-hook nil)
-    (setq lsp-enable-symbol-highlighting nil)
-    (setq lsp-signature-auto-activate nil)
+    ;; (setq lsp-eldoc-hook nil)
+    ;; (setq lsp-enable-symbol-highlighting nil)
+    ;; (setq lsp-signature-auto-activate nil)
 
     ;; todo 是否为左侧的的渲染显示
-    ;;(setq lsp-eldoc-render-all t)
+    (setq lsp-eldoc-render-all t)
 
     (setq lsp-diagnostics-provider :none)
     (setq lsp-eldoc-enable-hover nil)
-    (setq lsp-idle-delay 3)
-    (setq lsp-rust-analyzer-server-display-inlay-hints nil)
+    (setq lsp-idle-delay 0.6)
+    (setq lsp-rust-analyzer-server-display-inlay-hints t)
+    (setq lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial")
+    (setq lsp-rust-analyzer-display-chaining-hints t)
+    (setq lsp-rust-analyzer-display-lifetime-elision-hints-use-parameter-names nil)
+    (setq lsp-rust-analyzer-display-closure-return-type-hints t)
+    (setq lsp-rust-analyzer-display-parameter-hints nil)
+    (setq lsp-rust-analyzer-display-reborrow-hints nil)
     (setq lsp-rust-analyzer-cargo-watch-enable nil)
     ;; what to use when checking on-save. "check" is default, I prefer clippy
     (setq lsp-rust-analyzer-cargo-watch-command "clippy")
@@ -44,8 +50,8 @@
         (define-key rustic-mode-map (kbd "M-?") 'lsp-find-references))
       (add-hook 'lsp-ui-mode-hook
                 (lambda ()
-                  (setq lsp-ui-peek-always-show nil)
-                  (setq lsp-ui-sideline-show-hover nil)
+                  (setq lsp-ui-peek-always-show t)
+                  (setq lsp-ui-sideline-show-hover t)
                   (setq lsp-ui-sideline-show-code-actions nil)
                   (setq lsp-ui-sideline-delay 3)
                   (set-face-attribute 'lsp-ui-sideline-global t :height 0.75)
