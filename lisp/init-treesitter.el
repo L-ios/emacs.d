@@ -1,6 +1,6 @@
-;; Install third-party treesitter-based modes
-(require-package 'clojure-ts-mode)
-
+;;; init-treesitter.el --- Enable Treesitter-based major modes -*- lexical-binding: t -*-
+;;; Commentary:
+;;; Code:
 
 ;; You can download per-architecture pre-compiled release from
 ;; https://github.com/emacs-tree-sitter/tree-sitter-langs Rename
@@ -55,6 +55,9 @@ Return a list of languages seen along the way."
 (when-let ((jsmap (alist-get 'js-mode major-mode-remap-alist)))
   (add-to-list 'major-mode-remap-alist (cons 'js2-mode jsmap)))
 
+(when-let ((jsmap (alist-get 'clojure-mode major-mode-remap-alist)))
+  (add-to-list 'major-mode-remap-alist (cons 'clojurescript-mode 'clojurescript-ts-mode)))
+
 
 
 ;; Default
@@ -63,3 +66,4 @@ Return a list of languages seen along the way."
 
 
 (provide 'init-treesitter)
+;;; init-treesitter.el ends here

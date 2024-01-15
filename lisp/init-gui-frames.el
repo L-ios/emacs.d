@@ -95,6 +95,9 @@
 
 (require-package 'disable-mouse)
 
+(when (fboundp 'pixel-scroll-precision-mode)
+  (pixel-scroll-precision-mode))
+
 (when (display-graphic-p)
   (when *is-a-win*
     (dolist (charset '(kana han cjk-misc bopomofo unicode))
@@ -135,7 +138,6 @@
     (dolist (char-regexp charlist)
       (set-char-table-range composition-function-table (car char-regexp)
                             `([,(cdr char-regexp) 0 font-shape-gstring])))))
-
 
 (provide 'init-gui-frames)
 ;;; init-gui-frames.el ends here

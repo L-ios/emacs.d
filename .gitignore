@@ -56,6 +56,7 @@ site-lisp/package/
 /smex-items
 /eln-cache/
 /projects
+<<<<<<< HEAD
 emojis/
 fonts/
 projectile.cache
@@ -64,3 +65,6 @@ server/
 note/
 org-roam.db
 tutorial/
+=======
+/forge-*.sqlite
+>>>>>>> f3fbd87593800a1e13c45bf3b4e98d540eba7a74
