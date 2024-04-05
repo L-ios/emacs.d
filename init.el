@@ -9,10 +9,10 @@
 ;; Produce backtraces when errors occur: can be helpful to diagnose startup issues
 ;; (setq debug-on-error t)
 
-(let ((minver "26.1"))
+(let ((minver "27.1"))
   (when (version< emacs-version minver)
     (error "Your Emacs is too old -- this config requires v%s or higher" minver)))
-(when (version< emacs-version "27.1")
+(when (version< emacs-version "28.1")
   (message "Your Emacs is old, and some functionality in this config will be disabled. Please upgrade if possible."))
 
 (setq warning-suppress-types '((initialization) (comp)))
@@ -24,7 +24,7 @@
 (defconst *is-a-mac* (eq system-type 'darwin))
 (defconst *is-a-win* (eq system-type 'windows-nt))
 
-;; Adjust garbage collection thresholds during startup, and thereafter
+;; Adjust garbage collection threshold for early startup (see use of gcmh below)
 (let ((normal-gc-cons-threshold (* 32 1024 1024 (if *is-a-win* 16 1)))
       (init-gc-cons-threshold (* 128 1024 1024 (if *is-a-win* 4 1))))
   (setq gc-cons-threshold init-gc-cons-threshold)
@@ -44,6 +44,15 @@
 ;; Calls (package-initialize)
 (require 'init-elpa)      ;; Machinery for installing required packages
 (require 'init-exec-path) ;; Set up $PATH
+
+;; General performance tuning
+(when (require-package 'gcmh)
+  (setq gcmh-high-cons-threshold (* 128 1024 1024))
+  (add-hook 'after-init-hook (lambda ()
+                               (gcmh-mode)
+                               (diminish 'gcmh-mode))))
+
+(setq jit-lock-defer-time 0)
 
 ;; Allow users to provide an optional "init-preload-local.el"
 (require 'init-preload-local nil t)
@@ -126,7 +135,6 @@
 (require 'init-sly)
 (require 'init-clojure)
 (require 'init-clojure-cider)
-(require 'init-common-lisp)
 
 (when *spell-check-support-enabled*
   (require 'init-spelling))
