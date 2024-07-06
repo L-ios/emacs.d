@@ -102,6 +102,7 @@
 (require 'init-javascript)
 (require 'init-php)
 (require 'init-org)
+(require 'init-org-capture)
 (require 'init-blog)
 ;; (require 'init-org-roam)
 (require 'init-nxml)

@@ -16,6 +16,10 @@
   ;; Godef jump key binding
   ;; (local-set-key (kbd "M-,") 'godef-jump)
   ;; (local-set-key (kbd "M-.") 'pop-tag-mark)
+  (add-hook 'go-mode-hook
+            (lambda ()
+              (setq tab-width 4)))
+
 
   (when (maybe-require-package 'lsp-mode)
     (add-hook 'go-mode-hook 'lsp-deferred)
