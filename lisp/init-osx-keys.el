@@ -7,7 +7,7 @@
   (setq mac-option-key-is-meta nil)
   (setq mac-command-key-is-meta t)
   (setq mac-command-modifier 'meta)
-  (setq mac-option-modifier 'none)
+  (setq mac-option-modifier 'super)
   ;; Make mouse wheel / trackpad scrolling less jerky
   (setq mouse-wheel-scroll-amount '(1
                                     ((shift) . 5)
