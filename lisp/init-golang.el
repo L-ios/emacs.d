@@ -45,7 +45,7 @@
                         :underline t :foreground "green"
                         :weight 'bold))
 
-  (when (maybe-require-package 'go-snippets)))
+  (when (maybe-require-package 'yasnippet-snippets)))
 
 ;;; flymake-go
 ;;; go-autocomplete
