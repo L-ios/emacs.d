@@ -4,91 +4,127 @@
 
 ;; base https://robert.kra.hn/posts/2021-02-07_rust-with-emacs/
 
+
 (when (maybe-require-package 'rustic)
   ;; comment to disable rustfmt on save
   (setq rustic-format-on-save t)
-  (add-hook 'rustic-mode-hook 'rk/rustic-mode-hook)
+  (with-eval-after-load 'rustic
+    (define-key rustic-mode-map (kbd  "M-j") 'lsp-ui-imenu)
+    (define-key rustic-mode-map (kbd  "M-?") 'lsp-find-references)
+    (define-key rustic-mode-map (kbd "C-c C-c a")  'lsp-execute-code-action)
+    (define-key rustic-mode-map (kbd  "C-c C-c d") 'dap-hydra)
+    (define-key rustic-mode-map (kbd  "C-c C-c h") 'lsp-ui-doc-glance)
+    (define-key rustic-mode-map (kbd "TAB") 'company-indent-or-complete-common)
+    (define-key rustic-mode-map (kbd "C-c C-c e") 'lsp-execute-code-action)
+    (define-key rustic-mode-map (kbd "C-c C-c m") 'lsp-rust-analyzer-expand-macro)
+    (define-key rustic-mode-map (kbd "C-c C-c l") 'flycheck-list-errors)
+    (define-key rustic-mode-map (kbd "C-c C-c r") 'lsp-rename)
+    (define-key rustic-mode-map (kbd "C-c C-c q") 'lsp-workspace-restart)
+    (define-key rustic-mode-map (kbd "C-c C-c Q") 'lsp-workspace-shutdown)
+    (define-key rustic-mode-map (kbd "C-c i") 'lsp-ui-doc-focus-frame)
+    (define-key rustic-mode-map (kbd "C-c C-c s") 'lsp-rust-analyzer-status)))
 
-  (when (maybe-require-package 'lsp-mode)
-    ;; uncomment for less flashiness
-    ;; (setq lsp-eldoc-hook nil)
-    ;; (setq lsp-enable-symbol-highlighting nil)
-    ;; (setq lsp-signature-auto-activate nil)
 
-    ;; todo 是否为左侧的的渲染显示
-    (setq lsp-eldoc-render-all t)
+(when (maybe-require-package 'company)
+  ;; how long to wait until popup
+  (setq company)
+  (if *is-a-win*
+      (setq company-idle-delay 3)
+    (setq company-idle-delay 30))
+  ;; (setq company-tooltip-align-annotations t)
 
+  ;; uncomment to disable popup
+  (if *is-a-win*
+      (setq company-begin-commands nil)
+    (setq company-begin-commands nil))
+  ;; (define-key company-active-map (kbd "C-n") 'company-select-next)
+  ;; (define-key company-active-map (kbd "C-p") 'company-select-previous)
+  ;; (define-key company-active-map (kbd "M-<") 'company-select-first)
+  ;; (define-key company-active-map (kbd "M->") 'company-select-last)
+
+  ;; (define-key company-mode-map (kbd "<tab>") 'tab-indent-or-complete)
+  ;; (define-key company-mode-map (kbd "TAB") 'tab-indent-or-complete)
+  ;; (add-hook 'rustic-mode #'company)
+  )
+
+(when (maybe-require-package 'lsp-mode)
+  ;; uncomment for less flashiness
+  (when *is-a-win*
+    (setq lsp-eldoc-hook nil)
+    (setq lsp-enable-symbol-highlighting nil)
+    (setq lsp-signature-auto-activate nil)
     (setq lsp-diagnostics-provider :none)
-    (setq lsp-eldoc-enable-hover nil)
-    (setq lsp-idle-delay 0.6)
-    (setq lsp-rust-analyzer-server-display-inlay-hints t)
-    (setq lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial")
-    (setq lsp-rust-analyzer-display-chaining-hints t)
-    (setq lsp-rust-analyzer-display-lifetime-elision-hints-use-parameter-names nil)
-    (setq lsp-rust-analyzer-display-closure-return-type-hints t)
-    (setq lsp-rust-analyzer-display-parameter-hints nil)
-    (setq lsp-rust-analyzer-display-reborrow-hints nil)
-    (setq lsp-rust-analyzer-cargo-watch-enable nil)
-    ;; what to use when checking on-save. "check" is default, I prefer clippy
-    (setq lsp-rust-analyzer-cargo-watch-command "clippy")
-    (setq lsp-rust-server 'rust-analyzer)
-    (setq lsp-signature-render-documentation nil)
-    (with-eval-after-load 'rustic
-      (define-key rustic-mode-map (kbd "TAB") 'company-indent-or-complete-common)
-      (define-key rustic-mode-map (kbd "C-c C-c e") 'lsp-execute-code-action)
-      (define-key rustic-mode-map (kbd "C-c C-c r") 'lsp-rename)
-      (define-key rustic-mode-map (kbd "C-c C-c q") 'lsp-workspace-restart)
-      (define-key rustic-mode-map (kbd "C-c C-c Q") 'lsp-workspace-shutdown)
-      (define-key rustic-mode-map (kbd "C-c C-c s") 'lsp-rust-analyzer-status))
+    (setq lsp-eldoc-enable-hover nil))
 
-    (add-hook 'rustic-mode-hook #'lsp)
+  ;; (setq lsp-completion-enable nil)
+  ;; todo 是否为左侧的的渲染显示
+  (setq lsp-eldoc-render-all nil)
+  (setq lsp-idle-delay 3.6)
+  (setq lsp-inlay-hints-enable nil)
+  (setq lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial")
+  (setq lsp-rust-analyzer-display-chaining-hints t)
+  (setq lsp-rust-analyzer-display-closure-return-type-hints t)
+  (if *is-a-win*
+      ((setq lsp-rust-analyzer-display-lifetime-elision-hints-use-parameter-names nil)
+       (setq lsp-rust-analyzer-display-parameter-hints nil)
+       (setq lsp-rust-analyzer-display-reborrow-hints nil)
+       (setq lsp-rust-analyzer-cargo-watch-enable nil))
+    ((setq lsp-rust-analyzer-display-lifetime-elision-hints-use-parameter-names nil)
+     (setq lsp-rust-analyzer-display-parameter-hints nil)
+     (setq lsp-rust-analyzer-display-reborrow-hints nil)
+     (setq lsp-rust-analyzer-cargo-watch-enable t)))
 
-    (when (maybe-require-package 'lsp-ui)
-      (with-eval-after-load 'rustic
-        (define-key rustic-mode-map (kbd "C-c i") 'lsp-ui-doc-focus-frame)
-        (define-key rustic-mode-map (kbd "C-q") 'lsp-ui-imenu)
-        (define-key rustic-mode-map (kbd "M-?") 'lsp-find-references))
-      (add-hook 'lsp-ui-mode-hook
-                (lambda ()
-                  (setq lsp-ui-peek-always-show t)
-                  (setq lsp-ui-sideline-show-hover t)
-                  (setq lsp-ui-sideline-show-code-actions nil)
-                  (setq lsp-ui-sideline-delay 3)
-                  (set-face-attribute 'lsp-ui-sideline-global t :height 0.75)
-                  (when (display-graphic-p)
-                    (setq lsp-ui-doc-enable t)
-                    (setq lsp-ui-doc-max-height 20)
-                    (setq lsp-ui-doc-position 'at-point)
-                    (setq lsp-ui-doc-show-with-cursor t)
-                    (setq lsp-ui-doc-delay 3))))
-      (add-hook 'lsp-mode-hook 'lsp-ui-mode)))
+  (when *is-a-win*
+    (setq lsp-signature-render-documentation nil))
+  (add-hook 'rustic-mode-hook #'lsp))
 
-  (when (maybe-require-package 'company)
-    ;; how long to wait until popup
-    (setq company-idle-delay 3)
-    (setq company-tooltip-align-annotations t)
+(when (maybe-require-package 'lsp-ui)
+  (setq lsp-ui-peek-always-show t)
+  (setq lsp-ui-sideline-show-hover t)
+  (if *is-a-win*
+      ((setq lsp-ui-sideline-show-code-actions nil)
+       (setq lsp-ui-sideline-delay 3))
+    ((setq lsp-ui-sideline-delay 100)
+     (setq lsp-ui-sideline-show-code-actions t)))
+
+  (set-face-attribute 'lsp-ui-sideline-global t :height 0.75)
+  (when (display-graphic-p)
+    (setq lsp-ui-doc-enable t)
+    (setq lsp-ui-doc-max-height 20)
+    (setq lsp-ui-doc-position 'at-point)
+    (setq lsp-ui-doc-show-with-cursor t)
+    (setq lsp-ui-doc-delay 3))
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 
 
-    ;; uncomment to disable popup
-    (setq company-begin-commands nil)
 
-    (with-eval-after-load 'rustic
-      (define-key company-active-map (kbd "C-n") 'company-select-next)
-      (define-key company-active-map (kbd "C-p") 'company-select-previous)
-      (define-key company-active-map (kbd "M-<") 'company-select-first)
-      (define-key company-active-map (kbd "M->") 'company-select-last)
-      (define-key company-active-map (kbd "<tab>") 'tab-indent-or-complete)
-      (define-key company-active-map (kbd "TAB") 'tab-indent-or-complete))
-    (add-hook 'rustic-mode #'company))
-  (when (maybe-require-package 'toml-mode)))
+(when (maybe-require-package 'toml-mode))
+(when (maybe-require-package 'rust-playground))
 
-(defun rk/rustic-mode-hook ()
-  ;; so that run C-c C-c C-r works without having to confirm, but don't try to
-  ;; save rust buffers that are not file visiting. Once
-  ;; https://github.com/brotzeit/rustic/issues/253 has been resolved this should
-  ;; no longer be necessary.
-  (when buffer-file-name
-    (setq-local buffer-save-without-query t)))
+(when (maybe-require-package 'exec-path-from-shell)
+  (exec-path-from-shell-initialize))
+
+(when (executable-find "lldb-mi")
+  (when (maybe-require-package 'dap-mode)
+    (dap-ui-mode)
+    (dap-ui-controls-mode 1)
+
+    (when ((maybe-require-package 'dap-lldb)
+           (maybe-require-package 'dap-gdb-lldb))
+      (dap-gdb-lldb-setup)
+      (dap-register-debug-template
+       "Rust::LLDB Run Configuration"
+       (list :type "lldb"
+             :request "launch"
+             :name "LLDB:run"
+             :gdbpath "rust-lldb"
+             ;; uncomment if lldb is not in PATH
+             ;; :lldbmipath "path/to/lldb-mi"
+             )
+       )
+      )
+    )
+  )
 
 (defun company-yasnippet-or-completion ()
   (interactive)
@@ -120,17 +156,15 @@
 (when (maybe-require-package 'yasnippet)
   (add-hook 'prog-mode-hook #'yas-minor-mode)
   (add-hook 'text-mode-hook #'yas-minor-mode)
-  (with-eval-after-load 'rustic
-    (yas-reload-all))
+  (add-hook 'rustic-mode-hook #'yas-reload-all)
   (maybe-require-package 'yasnippet-snippets))
+
 
 ;;; add for org
 (maybe-require-package 'ob-rust)
 
 (when (maybe-require-package 'flycheck-rust)
-  (with-eval-after-load 'rustic
-    (define-key rustic-mode-map (kbd "C-c C-c l") 'flycheck-list-errors)
-    (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)))
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
 (provide 'init-rust)
 ;;; init-rust.el ends here
