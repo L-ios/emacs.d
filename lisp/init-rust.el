@@ -8,46 +8,38 @@
 (when (maybe-require-package 'rustic)
   ;; comment to disable rustfmt on save
   (setq rustic-format-on-save t)
+  (setq rustic-lsp-server 'rust-analyzer)
   (with-eval-after-load 'rustic
-    (define-key rustic-mode-map (kbd  "M-j") 'lsp-ui-imenu)
     (define-key rustic-mode-map (kbd  "M-?") 'lsp-find-references)
     (define-key rustic-mode-map (kbd "C-c C-c a")  'lsp-execute-code-action)
     (define-key rustic-mode-map (kbd  "C-c C-c d") 'dap-hydra)
     (define-key rustic-mode-map (kbd  "C-c C-c h") 'lsp-ui-doc-glance)
-    (define-key rustic-mode-map (kbd "TAB") 'company-indent-or-complete-common)
+    ;; (define-key rustic-mode-map (kbd "TAB") 'company-indent-or-complete-common)
     (define-key rustic-mode-map (kbd "C-c C-c e") 'lsp-execute-code-action)
     (define-key rustic-mode-map (kbd "C-c C-c m") 'lsp-rust-analyzer-expand-macro)
     (define-key rustic-mode-map (kbd "C-c C-c l") 'flycheck-list-errors)
     (define-key rustic-mode-map (kbd "C-c C-c r") 'lsp-rename)
     (define-key rustic-mode-map (kbd "C-c C-c q") 'lsp-workspace-restart)
     (define-key rustic-mode-map (kbd "C-c C-c Q") 'lsp-workspace-shutdown)
+    (define-key rustic-mode-map (kbd "C-c C-c s") 'lsp-rust-analyzer-status)
+    ;; lsp-ui
     (define-key rustic-mode-map (kbd "C-c i") 'lsp-ui-doc-focus-frame)
-    (define-key rustic-mode-map (kbd "C-c C-c s") 'lsp-rust-analyzer-status)))
+    (define-key rustic-mode-map (kbd  "M-j") 'lsp-ui-imenu)
+    (define-key rustic-mode-map (kbd "C-c C-c d") 'lsp-ui-peek-find-definitions)
+    (define-key rustic-mode-map (kbd "C-c C-c c") 'lsp-ui-peek-find-references)
+    ;; lsp-treemacs
+    (define-key rustic-mode-map (kbd "C-c C-o r") 'lsp-treemacs-references)
+    (define-key rustic-mode-map (kbd "C-c C-o i") 'lsp-treemacs-implementations)
+    (define-key rustic-mode-map (kbd "C-c C-o c") 'lsp-treemacs-call-hierarchy)
+    (define-key rustic-mode-map (kbd "C-c C-o t") 'lsp-treemacs-type-hierarchy)
+    (define-key rustic-mode-map (kbd "C-c C-o e") 'lsp-treemacs-errors-list)
+    ))
 
-
-(when (maybe-require-package 'company)
-  ;; how long to wait until popup
-  (setq company)
-  (if *is-a-win*
-      (setq company-idle-delay 3)
-    (setq company-idle-delay 30))
-  ;; (setq company-tooltip-align-annotations t)
-
-  ;; uncomment to disable popup
-  (if *is-a-win*
-      (setq company-begin-commands nil)
-    (setq company-begin-commands nil))
-  ;; (define-key company-active-map (kbd "C-n") 'company-select-next)
-  ;; (define-key company-active-map (kbd "C-p") 'company-select-previous)
-  ;; (define-key company-active-map (kbd "M-<") 'company-select-first)
-  ;; (define-key company-active-map (kbd "M->") 'company-select-last)
-
-  ;; (define-key company-mode-map (kbd "<tab>") 'tab-indent-or-complete)
-  ;; (define-key company-mode-map (kbd "TAB") 'tab-indent-or-complete)
-  ;; (add-hook 'rustic-mode #'company)
-  )
-
+;; company 和 corfu-mode有冲突
 (when (maybe-require-package 'lsp-mode)
+  (with-eval-after-load 'lsp-mode
+    (setq lsp-completion-provider :none))
+
   ;; uncomment for less flashiness
   (when *is-a-win*
     (setq lsp-eldoc-hook nil)
@@ -56,49 +48,65 @@
     (setq lsp-diagnostics-provider :none)
     (setq lsp-eldoc-enable-hover nil))
 
-  ;; (setq lsp-completion-enable nil)
   ;; todo 是否为左侧的的渲染显示
-  (setq lsp-eldoc-render-all nil)
+  (setq lsp-eldoc-render-all t)
   (setq lsp-idle-delay 3.6)
-  (setq lsp-inlay-hints-enable nil)
+  (setq lsp-inlay-hints-enable t)
   (setq lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial")
   (setq lsp-rust-analyzer-display-chaining-hints t)
   (setq lsp-rust-analyzer-display-closure-return-type-hints t)
   (if *is-a-win*
-      ((setq lsp-rust-analyzer-display-lifetime-elision-hints-use-parameter-names nil)
-       (setq lsp-rust-analyzer-display-parameter-hints nil)
-       (setq lsp-rust-analyzer-display-reborrow-hints nil)
-       (setq lsp-rust-analyzer-cargo-watch-enable nil))
-    ((setq lsp-rust-analyzer-display-lifetime-elision-hints-use-parameter-names nil)
-     (setq lsp-rust-analyzer-display-parameter-hints nil)
-     (setq lsp-rust-analyzer-display-reborrow-hints nil)
-     (setq lsp-rust-analyzer-cargo-watch-enable t)))
+      (progn
+        (setq lsp-rust-analyzer-display-parameter-hints nil)
+        (setq lsp-rust-analyzer-cargo-watch-enable nil))
+    (progn
+      (setq lsp-rust-analyzer-display-lifetime-elision-hints-use-parameter-names t)
+      (setq lsp-rust-analyzer-display-parameter-hints t)
+      (setq lsp-rust-analyzer-display-reborrow-hints "mutable")
+      (setq lsp-rust-analyzer-cargo-watch-enable t)))
 
   (when *is-a-win*
     (setq lsp-signature-render-documentation nil))
-  (add-hook 'rustic-mode-hook #'lsp))
+  (add-hook 'rustic-mode-hook 'lsp-deferred))
 
 (when (maybe-require-package 'lsp-ui)
-  (setq lsp-ui-peek-always-show t)
-  (setq lsp-ui-sideline-show-hover t)
+  ;; lsp-ui-sideline
   (if *is-a-win*
-      ((setq lsp-ui-sideline-show-code-actions nil)
-       (setq lsp-ui-sideline-delay 3))
-    ((setq lsp-ui-sideline-delay 100)
-     (setq lsp-ui-sideline-show-code-actions t)))
+      (progn
+        (message "disable lsp-ui-sideline on windows")
+        (setq lsp-ui-sideline-show-diagnostics nil))
+    (progn
+      (setq lsp-ui-sideline-show-hover t)
+      (setq lsp-ui-sideline-show-code-actions t)
+      (setq lsp-ui-sideline-delay )))
+  ;; lsp-ui-peek
+  (if *is-a-win*
+      ((message "disable lsp-ui-peek-mode on windows"))
+    ((lsp-ui-peek-mode)
+     (setq lsp-ui-peek-show-directory t)
+     (setq lsp-ui-peek-always-show t)
+     ))
 
-  (set-face-attribute 'lsp-ui-sideline-global t :height 0.75)
+  ;; lsp-ui-doc
   (when (display-graphic-p)
+    (set-face-attribute 'lsp-ui-sideline-global t :height 0.75)
     (setq lsp-ui-doc-enable t)
     (setq lsp-ui-doc-max-height 20)
     (setq lsp-ui-doc-position 'at-point)
     (setq lsp-ui-doc-show-with-cursor t)
     (setq lsp-ui-doc-delay 3))
+
+  ;; lsp-ui-imenu
+  (when (not *is-a-win*)
+    (setq lsp-ui-imenu-window-fix-width t)
+    (setq lsp-ui-imenu-auto-refresh t)
+    (setq lsp-ui-imenu-refresh-delay 3))
+
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 
+;; lsp-treemacs
+(when (maybe-require-package 'lsp-treemacs))
 
-
-(when (maybe-require-package 'toml-mode))
 (when (maybe-require-package 'rust-playground))
 
 (when (maybe-require-package 'exec-path-from-shell)
