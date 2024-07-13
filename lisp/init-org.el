@@ -169,14 +169,14 @@ typical word processor."
     ))
 
 ;; Example usage:
-(let ((result (get-monday-of-week)))
-  (if result
-      (message "Monday Timestamp: %s" result)
-    (message "Error: Unable to determine Monday Timestamp")))
+;; (let ((result (get-monday-of-week)))
+;;   (if result
+;;       (message "Monday Timestamp: %s" result)
+;;     (message "Error: Unable to determine Monday Timestamp")))
 
-(add-to-list 'org-capture-templates `("j" "Journal Note" entry (file+olp+datetree
-                                                                ,(concat org-journal-dir (format-time-string "journal-%Y-%m-%d-%M-%S.org" )))
-                                      "* Event: %?\n %i\n  From: %a"))
+;; (add-to-list 'org-capture-templates `("j" "Journal Note" entry (file+olp+datetree
+;;                                                                 ,(concat org-journal-dir (format-time-string "journal-%Y-%m-%d-%M-%S.org" )))
+;;                                       "* Event: %?\n %i\n  From: %a"))
 ;;; Refiling
 
 (setq org-refile-use-cache nil)
