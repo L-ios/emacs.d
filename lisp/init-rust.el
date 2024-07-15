@@ -45,8 +45,9 @@
     (setq lsp-eldoc-hook nil)
     (setq lsp-enable-symbol-highlighting nil)
     (setq lsp-signature-auto-activate nil)
-    (setq lsp-diagnostics-provider :none)
     (setq lsp-eldoc-enable-hover nil))
+
+  (setq lsp-headerline-breadcrumb-enable nil)
 
   ;; todo 是否为左侧的的渲染显示
   (setq lsp-eldoc-render-all t)
@@ -78,18 +79,17 @@
     (progn
       (setq lsp-ui-sideline-show-hover t)
       (setq lsp-ui-sideline-show-code-actions t)
-      (setq lsp-ui-sideline-delay )))
+      (setq lsp-ui-sideline-delay 1)))
   ;; lsp-ui-peek
   (if *is-a-win*
       ((message "disable lsp-ui-peek-mode on windows"))
-    ((lsp-ui-peek-mode)
-     (setq lsp-ui-peek-show-directory t)
-     (setq lsp-ui-peek-always-show t)
-     ))
+    (progn
+      (setq lsp-ui-peek-show-directory t)
+      (setq lsp-ui-peek-always-show t)
+      ))
 
   ;; lsp-ui-doc
   (when (display-graphic-p)
-    (set-face-attribute 'lsp-ui-sideline-global t :height 0.75)
     (setq lsp-ui-doc-enable t)
     (setq lsp-ui-doc-max-height 20)
     (setq lsp-ui-doc-position 'at-point)
