@@ -79,8 +79,6 @@
     (setq org-journal-date-format "%A, %d %B %Y")
     (setq org-journal-file-header 'org-journal-file-header-func)))
 
-
-
 ;; Lots of stuff from http://doc.norang.ca/org-mode.html
 
 ;; Re-align tags when window shape changes
@@ -188,7 +186,7 @@ typical word processor."
 
 (setq org-refile-use-cache nil)
 ;; see https://stackoverflow.com/questions/11384516/how-to-make-all-org-files-under-a-folder-added-in-agenda-list-automatically
-(setq org-agenda-files (directory-files-recursively "~/.emacs.d/journal/" "\\.org$"))
+(setq org-agenda-files (directory-files-recursively journal-dir "\\.org$"))
 
 ;; Targets include this file and any file contributing to the agenda - up to 5 levels deep
 (setq org-refile-targets '((nil :maxlevel . 5) (org-agenda-files :maxlevel . 5)))
