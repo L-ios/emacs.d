@@ -69,7 +69,7 @@
   ;; org-journal doc: https://github.com/bastibe/org-journal
   ;; https://www.emacswiki.org/emacs/PersonalDiary
 
-  (defvar journal-dir "~/.emacs.d/journal/")
+  (defvar journal-dir (expand-file-name "lisp" user-emacs-directory))
   (unless (file-directory-p journal-dir)
     (make-directory journal-dir))
 
