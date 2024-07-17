@@ -14,6 +14,7 @@
     (define-key rustic-mode-map (kbd "C-c C-c a")  'lsp-execute-code-action)
     (define-key rustic-mode-map (kbd  "C-c C-c d") 'dap-hydra)
     (define-key rustic-mode-map (kbd  "C-c C-c h") 'lsp-ui-doc-glance)
+    ;; 使用corfu替代
     ;; (define-key rustic-mode-map (kbd "TAB") 'company-indent-or-complete-common)
     (define-key rustic-mode-map (kbd "C-c C-c e") 'lsp-execute-code-action)
     (define-key rustic-mode-map (kbd "C-c C-c m") 'lsp-rust-analyzer-expand-macro)
@@ -82,7 +83,8 @@
       (setq lsp-ui-sideline-delay 1)))
   ;; lsp-ui-peek
   (if *is-a-win*
-      ((message "disable lsp-ui-peek-mode on windows"))
+      (progn
+        (message "disable lsp-ui-peek-mode on windows"))
     (progn
       (setq lsp-ui-peek-show-directory t)
       (setq lsp-ui-peek-always-show t)

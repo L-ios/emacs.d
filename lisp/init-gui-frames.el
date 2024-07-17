@@ -99,20 +99,17 @@
   (pixel-scroll-precision-mode))
 
 (when (display-graphic-p)
-;;   (when *is-a-win*
-;;     (dolist (charset '(kana han cjk-misc bopomofo unicode))
-;;       (set-fontset-font t charset "Sarasa Fixed Slab SC"))
-;;     (set-face-attribute 'default nil :family "FiraCode Nerd Font Mono")
-;;     (set-fontset-font t 'symbol "Segoe UI Emoji" nil 'prepend))
+  (when *is-a-win*
+    (dolist (fontfamily '("Segoe UI Emoji"))
+      (when (member fontfamily (font-family-list))
+        (set-fontset-font
+         t 'symbol (font-spec :family fontfamily) nil 'prepend)))
 
-;; ;; (when (member "Segoe UI Emoji" (font-family-list))
-;; ;;   (set-fontset-font
-;; ;;    t 'symbol (font-spec :family "Segoe UI Emoji") nil 'prepend))
+    (set-face-attribute 'default nil :family "FiraCode Nerd Font Mono")
+    (dolist (charset '(kana han cjk-misc bopomofo unicode))
+      (set-fontset-font t charset (font-spec :family "Sarasa Fixed Slab SC") nil 'prepend)))
 
-;; ;;(set-fontset-font t 'symbol "Noto Color Emoji" nil 'append)
-;; ;;(set-fontset-font t 'symbol "Segoe UI Emoji" nil 'append)
-
-;;   (when (eq system-type 'gnu/linux))
+  (when (eq system-type 'gnu/linux))
   (when *is-a-mac*
     (dolist (charset '(kana han cjk-misc bopomofo unicode))
       (set-fontset-font t charset (font-spec :family "Sarasa Fixed Slab SC Nerd Font") nil 'append))
