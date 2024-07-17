@@ -65,11 +65,15 @@
      (`monthly "#+TITLE: Monthly Journal\n#+STARTUP: folded")
      (`yearly "#+TITLE: Yearly Journal\n#+STARTUP: folded"))))
 
-
 (when (maybe-require-package 'org-journal)
   ;; org-journal doc: https://github.com/bastibe/org-journal
   ;; https://www.emacswiki.org/emacs/PersonalDiary
-  (setq org-journal-dir "~/.emacs.d/journal/")
+
+  (defvar journal-dir "~/.emacs.d/journal/")
+  (unless (file-directory-p journal-dir)
+    (make-directory journal-dir))
+
+  (setq org-journal-dir journal-dir)
   (setq org-journal-file-type 'weekly)
   (setq org-journal-date-format "%A, %d %B %Y")
   (setq org-journal-file-header 'org-journal-file-header-func))
