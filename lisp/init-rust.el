@@ -8,7 +8,7 @@
 (when (maybe-require-package 'rustic)
   ;; comment to disable rustfmt on save
   (setq rust-rustfmt-switches '("--edition" "2021"))
-  (setq rustic-rustfmt-args '("--edition" "2021"))
+  (setq rustic-rustfmt-args "--edition 2021")
   (setq rustic-format-on-save t)
   (setq rustic-lsp-server 'rust-analyzer)
   (with-eval-after-load 'rustic
