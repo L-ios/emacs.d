@@ -7,6 +7,8 @@
 
 (when (maybe-require-package 'rustic)
   ;; comment to disable rustfmt on save
+  (setq rust-rustfmt-switches '("--edition" "2021"))
+  (setq rustic-rustfmt-args '("--edition" "2021"))
   (setq rustic-format-on-save t)
   (setq rustic-lsp-server 'rust-analyzer)
   (with-eval-after-load 'rustic
@@ -50,10 +52,10 @@
 
   (setq lsp-headerline-breadcrumb-enable nil)
 
-  ;; todo 是否为左侧的的渲染显示
-  (setq lsp-eldoc-render-all t)
-  (setq lsp-idle-delay 3.6)
-  (setq lsp-inlay-hints-enable t)
+  ;; 是否在底部进行显示doc
+  ;; (setq lsp-eldoc-render-all t)
+  ;; (setq lsp-idle-delay 3.6)
+  ;; (setq lsp-inlay-hints-enable t)
   (setq lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial")
   (setq lsp-rust-analyzer-display-chaining-hints t)
   (setq lsp-rust-analyzer-display-closure-return-type-hints t)
@@ -72,6 +74,8 @@
   (add-hook 'rustic-mode-hook 'lsp-deferred))
 
 (when (maybe-require-package 'lsp-ui)
+
+  ;; todo 是否为左侧的的渲染显示
   ;; lsp-ui-sideline
   (if *is-a-win*
       (progn
@@ -96,7 +100,7 @@
     (setq lsp-ui-doc-max-height 20)
     (setq lsp-ui-doc-position 'at-point)
     (setq lsp-ui-doc-show-with-cursor t)
-    (setq lsp-ui-doc-delay 3))
+    (setq lsp-ui-doc-delay 1))
 
   ;; lsp-ui-imenu
   (when (not *is-a-win*)
