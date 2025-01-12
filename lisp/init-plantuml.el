@@ -8,9 +8,10 @@
   (setq plantuml-indent-level 2)
   (setq plantuml-jar-args "-charset UTF-8")
   (maybe-require-package 'flycheck-plantuml)
-  (add-auto-mode 'plantuml-mode "\\.puml\\.plantuml\\")
+  (progn
+    (add-to-list 'auto-mode-alist '("\\.\\(puml\\|plantuml\\)\\'" . plantuml-mode)))
   (with-eval-after-load 'whitespace-cleanup-mode
     (add-to-list 'whitespace-cleanup-mode-ignore-modes 'plantuml-mode)))
 
-
+(provide 'init-plantuml)
 ;;; init-plantuml.el ends here
