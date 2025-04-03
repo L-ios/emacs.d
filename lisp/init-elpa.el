@@ -14,13 +14,13 @@
 ;;; Standard package repositories
 
 (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 (add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/") t)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-unsigned-archives "gnu")
-(add-to-list 'package-unsigned-archives "melpa")
 (add-to-list 'package-unsigned-archives "org")
 (add-to-list 'package-unsigned-archives "nongnu")
+(add-to-list 'package-unsigned-archives "melpa")
 ;; Official MELPA Mirror, in case necessary.
 ;; (add-to-list 'package-archives (cons "melpa-mirror" (concat proto "://www.mirrorservice.org/sites/melpa.org/packages/")) t)
 

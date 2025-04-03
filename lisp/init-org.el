@@ -389,25 +389,25 @@ typical word processor."
   (define-key org-agenda-mode-map (kbd "P") 'org-pomodoro))
 
 
-;; ;; Show iCal calendars in the org agenda
-;; (when (and *is-a-mac* (require 'org-mac-iCal nil t))
-;;   (setq org-agenda-include-diary t
-;;         org-agenda-custom-commands
-;;         '(("I" "Import diary from iCal" agenda ""
-;;            ((org-agenda-mode-hook #'org-mac-iCal)))))
+;; Show iCal calendars in the org agenda
+(when (and *is-a-mac* (require 'org-mac-iCal nil t))
+  (setq org-agenda-include-diary t
+        org-agenda-custom-commands
+        '(("I" "Import diary from iCal" agenda ""
+           ((org-agenda-mode-hook #'org-mac-iCal)))))
 
-;;   (add-hook 'org-agenda-cleanup-fancy-diary-hook
-;;             (lambda ()
-;;               (goto-char (point-min))
-;;               (save-excursion
-;;                 (while (re-search-forward "^[a-z]" nil t)
-;;                   (goto-char (match-beginning 0))
-;;                   (insert "0:00-24:00 ")))
-;;               (while (re-search-forward "^ [a-z]" nil t)
-;;                 (goto-char (match-beginning 0))
-;;                 (save-excursion
-;;                   (re-search-backward "^[0-9]+:[0-9]+-[0-9]+:[0-9]+ " nil t))
-;;                 (insert (match-string 0))))))
+  (add-hook 'org-agenda-cleanup-fancy-diary-hook
+            (lambda ()
+              (goto-char (point-min))
+              (save-excursion
+                (while (re-search-forward "^[a-z]" nil t)
+                  (goto-char (match-beginning 0))
+                  (insert "0:00-24:00 ")))
+              (while (re-search-forward "^ [a-z]" nil t)
+                (goto-char (match-beginning 0))
+                (save-excursion
+                  (re-search-backward "^[0-9]+:[0-9]+-[0-9]+:[0-9]+ " nil t))
+                (insert (match-string 0))))))
 
 
 (with-eval-after-load 'org
@@ -417,15 +417,10 @@ typical word processor."
     (define-key org-mode-map (kbd "M-h") nil)
     (define-key org-mode-map (kbd "C-c g") 'grab-mac-link)))
 
-(when (maybe-require-package 'plantuml-mode)
-  (with-eval-after-load 'plantuml-mode
-    (setq plantuml-exec-mode 'jar)
-    (setq plantuml-default-exec-mode 'jar)
-    (setq plantuml-indent-level 2)
-    (setq plantuml-jar-path "~/.emacs.d/plantuml.jar")
-    (setq org-plantuml-exec-mode 'jar)
-    (setq org-plantuml-jar-path "~/.emacs.d/plantuml.jar")
-    (setq org-plantuml-executable-args "-headless -charset UTF-8")))
+(with-eval-after-load 'plantuml-mode
+  (setq org-plantuml-exec-mode 'jar)
+  (setq org-plantuml-jar-path "~/.emacs.d/plantuml.jar")
+  (setq org-plantuml-executable-args "-headless -charset UTF-8"))
 
 (with-eval-after-load 'org
   (org-babel-do-load-languages

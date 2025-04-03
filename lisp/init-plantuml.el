@@ -3,7 +3,8 @@
 ;;; Code:
 
 (when (maybe-require-package 'plantuml-mode)
-  (setq plantuml-exec-mode "jar")
+  (setq plantuml-exec-mode 'jar)
+  (setq plantuml-default-exec-mode 'jar)
   (setq plantuml-jar-path "~/.emacs.d/plantuml.jar")
   (setq plantuml-indent-level 2)
   (setq plantuml-jar-args "-charset UTF-8")

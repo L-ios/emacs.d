@@ -99,6 +99,9 @@
   (pixel-scroll-precision-mode))
 
 (when (display-graphic-p)
+  (when (member "Maple Mono NF CN" (font-family-list))
+    (set-face-attribute 'default nil :family "Maple Mono NF CN"))
+
   (when *is-a-win*
     (dolist (fontfamily '("Segoe UI Emoji"))
       (when (member fontfamily (font-family-list))
