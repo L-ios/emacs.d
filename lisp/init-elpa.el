@@ -29,6 +29,8 @@
 ;; (add-to-list 'package-archives (cons "nongnu-mirror" "https://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/") t)
 ;; (add-to-list 'package-archives (cons "org-mirror" "https://mirrors.tuna.tsinghua.edu.cn/elpa/org/") t)
 
+;; Allow built-in packages to be upgraded
+(setq package-install-upgrade-built-in t)
 
 ;; Work-around for https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34341
 (when (and (version< emacs-version "26.3") (boundp 'libgnutls-version) (>= libgnutls-version 30604))

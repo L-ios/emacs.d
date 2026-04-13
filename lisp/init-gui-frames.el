@@ -70,8 +70,8 @@
 (add-hook 'after-init-hook 'disable-themes-on-terminal)
 
 (when *is-a-mac*
-  (when (maybe-require-package 'ns-auto-titlebar)
-    (ns-auto-titlebar-mode)))
+  (require-package 'ns-auto-titlebar)
+  (ns-auto-titlebar-mode))
 
 (when *is-a-mac*
   (add-to-list 'image-types 'svg))
