@@ -441,6 +441,7 @@ typical word processor."
       (kotlin . t)
       (latex . t)
       (ledger . t)
+      (mermaid . t)
       (ocaml . nil)
       (octave . t)
       (plantuml . t)
@@ -451,7 +452,22 @@ typical word processor."
       (sh . t) ;; obsolete
       (shell . t)
       (sql . t)
-      (sqlite . t)))))
+      (sqlite . t))))
+  ;; ob-mermaid: prefer PNG (Emacs cannot render foreignObject/HTML labels in
+  ;; SVG mermaid output); locate mmdc from exec-path or homebrew.
+  (maybe-require-package 'ob-mermaid)
+  (when (locate-library "ob-mermaid")
+    (require 'ob-mermaid)
+    (let ((mmdc (or (executable-find "mmdc")
+                    (executable-find "/opt/homebrew/bin/mmdc"))))
+      (when mmdc (setq ob-mermaid-cli-path mmdc)))))
+
+;; Refresh inline images after any babel block executes (incl. mermaid).
+(with-eval-after-load 'org
+  (add-to-list 'org-babel-after-execute-hook
+               (lambda ()
+                 (when (derived-mode-p 'org-mode)
+                   (org-display-inline-images)))))
 
 (setq org-export-backends '(ascii html latex md))
 

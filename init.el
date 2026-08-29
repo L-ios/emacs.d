@@ -7,7 +7,7 @@
 ;;; Code:
 
 ;; Produce backtraces when errors occur: can be helpful to diagnose startup issues
-;; (setq debug-on-error t)
+;;(setq debug-on-error t)
 
 (let ((minver "27.1"))
   (when (version< emacs-version minver)
@@ -154,6 +154,7 @@
 (require 'init-uiua)
 ;; (require 'init-zig)
 (require 'init-terminals)
+(require 'init-agent-shell)
 
 ;; Extra packages which don't require any configuration
 
