@@ -252,5 +252,26 @@ Intended for `agent-shell-markdown-render-functions'.
 (with-eval-after-load 'agent-shell-markdown
   (add-hook 'agent-shell-markdown-render-functions #'my/agent-shell-mermaid-render))
 
+;; jcode resume helper: jcode's ACP adapter does not implement session/list,
+;; so agent-shell's session picker never gets populated.  Offer local
+;; completion over ~/.jcode/sessions/ files instead, feeding the chosen id to
+;; `agent-shell-resume-session'.
+(defun my/agent-shell-jcode-pick-local-session ()
+  "Pick a jcode session from ~/.jcode/sessions and resume it via agent-shell."
+  (interactive)
+  (let* ((dir (expand-file-name "~/.jcode/sessions"))
+         (files (and (file-directory-p dir)
+                     (directory-files dir nil "\\`session_.*\\.json\\'")))
+         (candidates (mapcar (lambda (f)
+                               (propertize (file-name-sans-extension f)
+                                           'help-echo f))
+                             (seq-sort (lambda (a b) (string> a b)) files))))
+    (if (null candidates)
+        (message "No jcode sessions found in %s" dir)
+      (let* ((choice (completing-read "Resume jcode session: " candidates nil t))
+             (session-id (and choice (substring-no-properties choice))))
+        (when (and session-id (not (string-empty-p session-id)))
+          (agent-shell-resume-session session-id))))))
+
 (provide 'init-agent-shell)
 ;;; init-agent-shell.el ends here
