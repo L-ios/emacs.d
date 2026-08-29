@@ -207,16 +207,18 @@ Built with `agent-shell-make-environment-variables'."
 
 (defun my/agent-shell-mermaid-render (context)
   "Render complete mermaid source blocks in CONTEXT via mmdc.
-Intended for `agent-shell-markdown-render-functions'."
+Intended for `agent-shell-markdown-render-functions'.
+`agent-shell-markdown--source-blocks' returns alists, so access with
+`alist-get' (plist-get silently returns nil on them)."
   (when-let* ((mmdc (executable-find "mmdc"))
-              (blocks (plist-get context :source-blocks)))
+              (blocks (cdr (assq :source-blocks context))))
     (dolist (desc blocks)
-      (when (and (equal (plist-get desc :language) "mermaid")
-                 (plist-get desc :complete))
-        (let* ((block (plist-get desc :block))
-               (start (marker-position (plist-get block :start)))
-               (end (marker-position (plist-get block :end)))
-               (body (plist-get desc :body))
+      (when (and (equal (cdr (assq :language desc)) "mermaid")
+                 (cdr (assq :complete desc)))
+        (let* ((block (cdr (assq :block desc)))
+               (start (marker-position (cdr (assq :start block))))
+               (end (marker-position (cdr (assq :end block))))
+               (body (cdr (assq :body desc)))
                (buf (current-buffer)))
           (when (and (number-or-marker-p start)
                      (number-or-marker-p end)
