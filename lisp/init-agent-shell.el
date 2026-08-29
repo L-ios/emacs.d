@@ -257,19 +257,44 @@ Intended for `agent-shell-markdown-render-functions'.
 ;; completion over ~/.jcode/sessions/ files instead, feeding the chosen id to
 ;; `agent-shell-resume-session'.
 (defun my/agent-shell-jcode-pick-local-session ()
-  "Pick a jcode session from ~/.jcode/sessions and resume it via agent-shell."
+  "Pick a jcode session from ~/.jcode/sessions and resume it via agent-shell.
+Candidates are annotated with title, message count, and recency; empty
+sessions (no user/assistant messages) are hidden."
   (interactive)
   (let* ((dir (expand-file-name "~/.jcode/sessions"))
          (files (and (file-directory-p dir)
                      (directory-files dir nil "\\`session_.*\\.json\\'")))
-         (candidates (mapcar (lambda (f)
-                               (propertize (file-name-sans-extension f)
-                                           'help-echo f))
-                             (seq-sort (lambda (a b) (string> a b)) files))))
+         (candidates nil))
+    (dolist (f (seq-sort (lambda (a b) (string> a b)) files))
+      (let* ((path (expand-file-name f dir))
+             (meta (condition-case nil
+                       (let* ((json-object-type 'alist)
+                              (data (json-read-file path))
+                              (msgs (cdr (assq 'messages data)))
+                              (real 0) (title nil) (mtime (file-attribute-modification-time
+                                                          (file-attributes path))))
+                         (dolist (m (if (vectorp msgs) (append msgs nil) msgs))
+                           (when (member (cdr (assq 'role m)) '("user" "assistant"))
+                             (cl-incf real)))
+                         (cons real (cons (or (cdr (assq 'title data)) "") mtime)))
+                     (error nil))))
+        (when (and meta (> (car meta) 0))
+          (let* ((real (car meta))
+                 (title (cadr meta))
+                 (mtime (cddr meta))
+                 (time-str (if mtime (format-time-string "%m-%d %H:%M" mtime) ""))
+                 (label (format "%s  %s  [%d msgs]"
+                                time-str
+                                (if (string-empty-p title)
+                                    (file-name-sans-extension f)
+                                  title)
+                                real)))
+            (push (cons label (file-name-sans-extension f)) candidates)))))
     (if (null candidates)
-        (message "No jcode sessions found in %s" dir)
-      (let* ((choice (completing-read "Resume jcode session: " candidates nil t))
-             (session-id (and choice (substring-no-properties choice))))
+        (message "No jcode sessions (with content) found in %s" dir)
+      (let* ((choice (completing-read "Resume jcode session: "
+                                      (mapcar #'car candidates) nil t))
+             (session-id (cdr (assoc choice candidates))))
         (when (and session-id (not (string-empty-p session-id)))
           (agent-shell-resume-session session-id))))))
 
