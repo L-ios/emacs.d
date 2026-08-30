@@ -259,12 +259,14 @@ Intended for `agent-shell-markdown-render-functions'.
 
 ;; jcode resume helper: jcode's ACP adapter does not implement session/list,
 ;; so agent-shell's session picker never gets populated.  Offer local
-;; completion over ~/.jcode/sessions/ files instead, feeding the chosen id to
-;; `agent-shell-resume-session'.
-(defun my/agent-shell-jcode-pick-local-session ()
+;; completion over ~/.jcode/sessions/ files instead, feeding the chosen id
+;; straight to `agent-shell--start' with the jcode config (no agent-selection
+;; prompt).
+(defun agent-shell-jcode-picker-session ()
   "Pick a jcode session from ~/.jcode/sessions and resume it via agent-shell.
 Candidates are annotated with title, message count, and recency; empty
-sessions (no user/assistant messages) are hidden."
+sessions (no user/assistant messages) are hidden.  Resumes directly with
+the jcode agent config, skipping agent selection."
   (interactive)
   (let* ((dir (expand-file-name "~/.jcode/sessions"))
          (files (and (file-directory-p dir)
@@ -301,7 +303,9 @@ sessions (no user/assistant messages) are hidden."
                                       (mapcar #'car candidates) nil t))
              (session-id (cdr (assoc choice candidates))))
         (when (and session-id (not (string-empty-p session-id)))
-          (agent-shell-resume-session session-id))))))
+          (agent-shell--start :config (agent-shell-jcode-make-agent-config)
+                              :session-id session-id
+                              :new-session t))))))
 
 (provide 'init-agent-shell)
 ;;; init-agent-shell.el ends here
