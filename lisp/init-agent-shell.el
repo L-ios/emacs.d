@@ -26,7 +26,11 @@
 (with-eval-after-load 'agent-shell
   ;; Restore sessions with full history replay (jcode supports session/load
   ;; with replay; `minimal' shows only the title, which reads as empty).
-  (setq agent-shell-session-restore-verbosity 'full))
+  (setq agent-shell-session-restore-verbosity 'full)
+  ;; jcode is the default agent everywhere: plain M-x agent-shell starts it
+  ;; directly without the agent-selection prompt.  Use '(preselect . jcode)
+  ;; instead to keep the picker with jcode preselected.
+  (setq agent-shell-preferred-agent-config 'jcode))
 
 (with-eval-after-load 'agent-shell
   (defcustom agent-shell-jcode-command "jcode"
