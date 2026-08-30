@@ -24,6 +24,11 @@
 (require-package 'agent-shell)
 
 (with-eval-after-load 'agent-shell
+  ;; Restore sessions with full history replay (jcode supports session/load
+  ;; with replay; `minimal' shows only the title, which reads as empty).
+  (setq agent-shell-session-restore-verbosity 'full))
+
+(with-eval-after-load 'agent-shell
   (defcustom agent-shell-jcode-command "jcode"
     "Path to the jcode executable used by the ACP adapter."
     :type 'string
