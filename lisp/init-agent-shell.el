@@ -21,7 +21,10 @@
 
 ;;; Code:
 
-(require-package 'agent-shell)
+;; agent-shell requires Emacs 29.1+ (its deps declare (emacs "29.1")); skip
+;; gracefully on older Emacsen instead of failing startup.
+(when (version<= "29.1" emacs-version)
+  (require-package 'agent-shell))
 
 (with-eval-after-load 'agent-shell
   ;; Restore sessions with full history replay (jcode supports session/load
