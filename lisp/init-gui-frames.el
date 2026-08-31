@@ -70,8 +70,8 @@
 (add-hook 'after-init-hook 'disable-themes-on-terminal)
 
 (when *is-a-mac*
-  (when (maybe-require-package 'ns-auto-titlebar)
-    (ns-auto-titlebar-mode)))
+  (require-package 'ns-auto-titlebar)
+  (ns-auto-titlebar-mode))
 
 (when *is-a-mac*
   (add-to-list 'image-types 'svg))
@@ -91,6 +91,9 @@
 
 (require-package 'default-text-scale)
 (add-hook 'after-init-hook 'default-text-scale-mode)
+;; Unbind mouse bindings for text-scale-mode
+(dolist (bind '("C-<wheel-down>" "C-<wheel-up>" "C-<mouse-4>" "C-<mouse-5>"))
+  (define-key global-map (kbd bind) nil))
 
 
 (require-package 'disable-mouse)
