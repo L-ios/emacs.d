@@ -168,7 +168,9 @@
 (maybe-require-package 'dotenv-mode)
 (maybe-require-package 'shfmt)
 
-(when (maybe-require-package 'uptimes)
+;; uptimes package is broken on Emacs 32+ (expects old time format); guard load.
+(when (and (maybe-require-package 'uptimes)
+           (version< emacs-version "32"))
   (setq-default uptimes-keep-count 2000)
   (add-hook 'after-init-hook (lambda () (require 'uptimes))))
 
