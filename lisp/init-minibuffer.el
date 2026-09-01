@@ -19,6 +19,12 @@
                      embark-around-action-hooks)))
 
   (when (maybe-require-package 'embark-consult)
+    ;; Defer out of the startup path: load the integration when consult is
+    ;; first used.  (embark.el does the same on its side, so C-c C-o / C-c C-c
+    ;; in consult results keep working regardless of load order.)
+    (with-eval-after-load 'consult
+      (require 'embark-consult))
+
     (defmacro sanityinc/no-consult-preview (&rest cmds)
       `(with-eval-after-load 'consult
          (consult-customize ,@cmds :preview-key "M-P")))
