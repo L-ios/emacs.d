@@ -168,8 +168,16 @@ Built with `agent-shell-make-environment-variables'."
       (require 'agent-shell-menu))))
 
 ;; Workflow: agent-review — review agent diffs.  M-x agent-review-start
+;; Deferred: requiring it eagerly pulls in the whole agent-shell stack
+;; (plus org via agent-shell-queue-org), costing over 1.5s at startup.
 (when (locate-library "agent-review")
-  (require 'agent-review))
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (run-with-idle-timer
+               2 nil
+               (lambda ()
+                 (unless (featurep 'agent-review)
+                   (require 'agent-review)))))))
 
 ;; Org: transcripts — auto-save conversations as org files.
 (when (locate-library "agent-shell-org-transcript")

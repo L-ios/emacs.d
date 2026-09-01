@@ -70,7 +70,7 @@
 
 
 (when (maybe-require-package 'org2jekyll)
-  (add-hook 'org2jekyll-mode (blogroom-setup))
+  (add-hook 'org2jekyll-mode-hook #'blogroom-setup)
   (add-hook 'org-mode-hook 'org2jekyll-mode))
 
 (provide 'init-blog)

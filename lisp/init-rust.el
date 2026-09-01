@@ -115,9 +115,6 @@
 
 (when (maybe-require-package 'rust-playground))
 
-(when (maybe-require-package 'exec-path-from-shell)
-  (exec-path-from-shell-initialize))
-
 (when (executable-find "lldb-mi")
   (when (maybe-require-package 'dap-mode)
     (dap-ui-mode)
