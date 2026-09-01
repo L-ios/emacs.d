@@ -19,7 +19,6 @@
                      embark-around-action-hooks)))
 
   (when (maybe-require-package 'embark-consult)
-    (require 'embark-consult)
     (defmacro sanityinc/no-consult-preview (&rest cmds)
       `(with-eval-after-load 'consult
          (consult-customize ,@cmds :preview-key "M-P")))
