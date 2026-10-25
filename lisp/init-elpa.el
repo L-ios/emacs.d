@@ -72,7 +72,7 @@ locate PACKAGE."
 ;;; Fire up package.el
 
 (setq package-enable-at-startup nil)
-(setq package-native-compile t)
+(setq package-native-compile nil)
 (package-initialize)
 
 ;; package.el updates the saved version of package-selected-packages correctly only

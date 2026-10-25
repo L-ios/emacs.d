@@ -12,6 +12,14 @@
 ;;; disable compact font cache
 (setq inhibit-compacting-font-caches t)
 
+;; Disable native compilation: Emacs 31.1's bundled libgccjit passes
+;; "-mmacosx-version-min=18.0" which Apple clang 21 rejects, breaking startup.
+(when (and (fboundp 'native-comp-available-p) (native-comp-available-p))
+  (setq native-comp-enable-subr-trampolines nil)
+  (setq native-comp-deferred-compilation nil
+        package-native-compile nil
+        comp-deferred-compilation-black-list '(".*")))
+
 ;; So we can detect this having been loaded
 (provide 'early-init)
 

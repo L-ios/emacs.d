@@ -1,4 +1,4 @@
-;;; init-blog.el --- My blog setup for org-mode and org2jekyll
+;;; init-blog.el --- My blog setup for org-mode and org2jekyll -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 
