@@ -12,6 +12,15 @@
   (add-auto-mode 'markdown-mode "\\.md\\.html\\'")
   ;; Fontify fenced code blocks with their native major modes.
   (setq markdown-fontify-code-blocks-natively t)
+  ;; Edit fenced code blocks in an indirect buffer (C-c ') with the
+  ;; native major mode: indentation, completion, flycheck all work.
+  (maybe-require-package 'edit-indirect)
+  ;; Optional LSP for markdown (marksman): heading navigation, reference
+  ;; checking. Only activated when the server binary exists, so zero
+  ;; cost otherwise. lsp-deferred starts lazily on first use.
+  (when (and (executable-find "marksman") (fboundp 'lsp-deferred))
+    (add-hook 'markdown-mode-hook #'lsp-deferred)
+    (add-hook 'gfm-mode-hook #'lsp-deferred))
   (with-eval-after-load 'markdown-mode
     ;; ```mermaid blocks get mermaid-mode highlighting via the name
     ;; fallback (mermaid-mode is fboundp), so no mapping entry needed.
@@ -90,7 +99,7 @@ Uses mmdc; the image is written next to the current file (or in
     (add-to-list 'markdown-preview-stylesheets "http://thomasf.github.io/solarized-css/solarized-light.min.css")
     ;; override theme completely
     ;; (setq markdown-preview-stylesheets (list "http://thomasf.github.io/solarized-css/solarized-light.min.css"))
-    (add-to-list 'markdown-preview-javascript "http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML")
+    (add-to-list 'markdown-preview-javascript "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js")
     ;; comment up and uncomment blow for async
     ;; (add-to-list 'markdown-preview-javascript '("http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML" . async))
     ;; Mermaid live rendering in the browser preview.
