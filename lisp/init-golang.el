@@ -1,53 +1,78 @@
-;;; init-golang.el --- Support for the Golang language -*- lexical-binding: t -*-
+;;; init-golang.el --- Support for the Golang language -*- lexical-binding: t; -*-
 ;;; Commentary:
+;;; Modern Go setup: go-ts-mode (tree-sitter, requires the go grammar in
+;;; ~/.emacs.d/tree-sitter/), lsp-mode with gopls, and goimports on save.
 ;;; Code:
 
-;; go-mode https://github.com/dominikh/go-mode.el
-(when (maybe-require-package 'go-mode)
-  ;; Call Gofmt before saving
-  (setq gofmt-command "goimports")
-  (add-to-list 'auto-mode-alist '("\\.go\\'" . go-mode))
+(defconst my/go-ts-available
+  (and (fboundp 'treesit-ready-p) (treesit-ready-p 'go))
+  "Whether the Go tree-sitter grammar can be loaded.")
 
-  (add-hook 'go-mode-hook
-            (lambda ()
-              (setq tab-width 4)
-              ))
-  (add-hook 'before-save-hook 'gofmt-before-save)
+;;; Major mode -----------------------------------------------------------
 
-  (with-eval-after-load 'go-mode
-    ;; Godef jump key binding
-    (define-key go-mode-map (kbd "M-,") 'godef-jump)
-    (define-key go-mode-map (kbd "M-.") 'pop-tag-mark)))
+(if my/go-ts-available
+    (progn
+      (add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
+      (add-to-list 'auto-mode-alist '("/go\\.mod\\'" . go-mod-ts-mode)))
+  ;; Fall back to the classic mode when the grammar is missing (e.g. CI).
+  (when (maybe-require-package 'go-mode)
+    (add-to-list 'auto-mode-alist '("\\.go\\'" . go-mode))))
+
+(defun my/golang-mode-p ()
+  "Return t when the current buffer is any flavour of Go major mode."
+  (derived-mode-p 'go-ts-mode 'go-mode))
+
+;;; Formatting with goimports --------------------------------------------
+
+(defun my/go-format-buffer ()
+  "Format the current Go buffer with goimports."
+  (when (and (my/golang-mode-p) (executable-find "goimports"))
+    (let ((point-pos (point))
+          (window-pos (window-start)))
+      (call-process-region (point-min) (point-max) "goimports" t t nil
+                           "/dev/stdin")
+      (goto-char point-pos)
+      (set-window-start (selected-window) window-pos))))
+
+(defun my/go-setup-buffer ()
+  "Common setup for Go buffers."
+  (setq tab-width 8
+        indent-tabs-mode t)
+  (add-hook 'before-save-hook #'my/go-format-buffer nil t))
+
+(add-hook 'go-ts-mode-hook #'my/go-setup-buffer)
+(add-hook 'go-mode-hook #'my/go-setup-buffer)
+
+;;; LSP (gopls) ----------------------------------------------------------
 
 (when (maybe-require-package 'lsp-mode)
   (setq lsp-go-analyses '((shadow . t)
                           (simplifycompositelit . :json-false)))
-
+  (setq lsp-go-use-placeholders t
+        lsp-gopls-staticcheck t
+        ;; Complete function calls with argument placeholders.
+        lsp-gopls-complete-unimported t)
   (with-eval-after-load 'lsp-mode
     (setq lsp-completion-provider :none))
-  (add-hook 'go-mode-hook 'lsp-deferred)
+  (when (executable-find "gopls")
+    (add-hook 'go-ts-mode-hook #'lsp-deferred)
+    (add-hook 'go-mode-hook #'lsp-deferred))
 
-  ;; Set up before-save hooks to format buffer and add/delete imports.
-  ;; Make sure you don't have other gofmt/goimports hooks enabled.
-  (defun lsp-go-install-save-hooks ()
-    (add-hook 'before-save-hook #'lsp-format-buffer t t)
-    (add-hook 'before-save-hook #'lsp-organize-imports t t))
-  (add-hook 'go-mode-hook #'lsp-go-install-save-hooks))
+  ;; On-save formatting/imports via LSP when gopls is running; the
+  ;; goimports hook above already covers this, so keep LSP formatting off
+  ;; to avoid double work.
 
-
-;;; go-eldoc https://github.com/emacsorphanage/go-eldoc
-(when (maybe-require-package 'go-eldoc)
-  (add-hook 'go-mode-hook 'go-eldoc-setup)
-  (set-face-attribute 'eldoc-highlight-function-argument nil
-                      :underline t :foreground "green"
-                      :weight 'bold))
-
-(when (maybe-require-package 'yasnippet-snippets))
-;;; flymake-go
-;;; go-autocomplete
-;;; go-snappets
-;;; goflymake
-;;; eldoc
+  ;; Navigation that works both with and without LSP.
+  (defun my/go-jump-def ()
+    "Jump to the definition at point via LSP when available."
+    (interactive)
+    (if (and (fboundp 'lsp-mode) (bound-and-true-p lsp-mode))
+        (call-interactively #'lsp-find-definition)
+      (call-interactively #'xref-find-definitions)))
+  (with-eval-after-load 'go-ts-mode
+    (define-key go-ts-mode-map (kbd "M-.") #'my/go-jump-def))
+  (with-eval-after-load 'go-mode
+    (define-key go-mode-map (kbd "M-.") #'my/go-jump-def)))
 
 (provide 'init-golang)
 ;;; init-golang.el ends here
